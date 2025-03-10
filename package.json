@@ -4,7 +4,9 @@
   "description": "AsoAPP",
   "main": "dist/index.js",
   "scripts": {
-    "test": "tsc & npx nodemon dist/index.js"
+    "test": "tsc & npx nodemon dist/index.js",
+    "start": "node dist/index.js",
+    "build": "tsc"
   },
   "author": "",
   "license": "Apache-2.0",
