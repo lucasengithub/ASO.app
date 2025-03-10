@@ -331,7 +331,7 @@ h4{
     justify-content: left; /* Cambiado a center */
     align-items: left; /* Añadido para centrar elementos */
     padding: 20px;
-    width: 100%;
+    width: calc(100% - 20px); /* Compensar los márgenes */
     max-width: 800px; /* Añadido para mantener consistencia */
     margin: 0 auto; /* Añadido para centrar horizontalmente */
 }
@@ -341,7 +341,7 @@ h4{
     font-size: 1em;
     color: #040406;
     background-color: #36e452;
-    width: calc(100% - 20px); /* Compensar los márgenes */
+    width: calc(100% - 24px); /* Compensar los márgenes */
     text-align: left;
     margin: 10px;
     padding: 10px;
