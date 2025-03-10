@@ -2,8 +2,19 @@ export const barData = (
     `
     <a id="n0" href="/app/aadm">AADM</a>
     <a id="n1" href="/app">Inicio</a>
-    <a id="n2" href="/app/escuela">Escuela</a>` 
-
+    <a id="n2" href="/app/escuela">Escuela</a>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname;
+            const anchors = document.querySelectorAll('#aso-bar a');
+            anchors.forEach(anchor => {
+                if (anchor.getAttribute('href') === currentPath) {
+                    anchor.style.color = '#36e452';
+                }
+            });
+        });
+    </script>
+    `
 )
 
 export const topData = (
