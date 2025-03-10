@@ -144,15 +144,16 @@ app.get('/app/escuela', (req: Request, res: Response) => {
 });
 
 
-app.use('/fonts', (req: Request, res: Response, next: NextFunction) => {
-    const referer = req.headers.referer || ''
-    const host = req.get('host') || ''
-    if (referer.includes('/aso.css') || (referer && host.includes(host))) {
-        next()
-    } else {
-        res.status(403).send('La curiosidad se comió al gato ... y a ti también.')
+app.get('/network', (req: Request, res: Response) => {
+    fs.readFile(path.join(__dirname, '../public/netfail.html'), 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).send('Error reading file');
+            return;
+        }
+        navGen(data, res);
     }
-})
+);
+});
 
 
 app.use(express.static(path.join(__dirname, '../public')))

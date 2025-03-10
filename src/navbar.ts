@@ -7,7 +7,7 @@ export const barData = (
 )
 
 export const topData = (
-    `<button id="last" onclick="customBack()">◀</button>
+    `<button id="last" onclick="customBack()">×</button>
     <script>
         function customBack() {
             const currentPath = window.location.pathname;

@@ -1,3 +1,6 @@
+
+
+
 // filepath: /Users/lucaspeinado/aso.app/public/serviceworker.js
 var staticCacheName = "pwa";
 
@@ -7,30 +10,34 @@ self.addEventListener("install", function (e) {
             return cache.addAll([
                 "/",
                 "/app",
-                "/app/aadm",
-                "/app/escuela",
                 "/aso.css",
                 "/formula.js",
                 "/manifest.json",
-                "fonts/PKiko-Regular.otf"
+                "/network",
+                "fonts/PKiko-Regular.otf",
+                "fonts/DMMono-Regular.ttf",
+                "fonts/NeueMontreal-Regular.ttf",
             ]);
         })
     );
 });
 
-self.addEventListener("fetch", function (event) {
-    event.respondWith(
-        caches.match(event.request).then(function (response) {
-            if (response) {
+self.addEventListener("fetch", function (e) {
+    e.respondWith(
+        fetch(e.request)
+            .then(function (response) {
+                // En línea: se utiliza la versión online y se actualiza la caché
+                var responseClone = response.clone();
+                caches.open(staticCacheName).then(function (cache) {
+                    cache.put(e.request, responseClone);
+                });
                 return response;
-            }
-            return fetch(event.request).catch(function() {
-                // If both cache and network fail, redirect to /app
-                if (event.request.url.includes('/s/')) {
-                    return Response.redirect('/app' + event.request.url.split('/s')[1], 302);
-                }
-                return caches.match('/app');
-            });
-        })
+            })
+            .catch(function () {
+                // Sin conexión: se intenta la versión cacheada y, en caso de no existir, se redirige a "/network"
+                return caches.match(e.request).then(function (response) {
+                    return response || caches.match("/network");
+                });
+            })
     );
 });
