@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalador</title>
+    <link rel="stylesheet" href="/obj.installer/install.css">
+</head>
+<body>
+    <main>
+        <h1>Instalador</h1>
+
+        <form class="formc" id="instalarios">
+            
+            <img id="asoLogo" src="/icons/512.png" alt="aso.app">
+
+            <h2>Instalador de ASO.app</h2>
+            <div id="grp">
+                <label>
+                <input type="checkbox" name="configurarCorreo">
+                Instalar Correo de EducaMadrid
+            </label>
+            <label>
+                <input type="checkbox" name="instalarASOapp">
+                Instalar ASO.app
+            </label>
+        </div>
+            <button id="instalarios0">Instalar</button>
+        </form>
+
+        <div id="warn1" class="backstage">
+            <div  class="popup">
+                <h1>Advertencia</h1>
+                <p>Pon la ubicación de iCloud Relay <i>(en caso de usar iCloud+)</i> en <b>Usar país y zona horaria</b> o <u style="color: darkred;">tu cuenta de EducaMadrid será borrada</u>.</p>
+                <img  class="simg" src="/obj.installer/icloud.gif" alt="Ubicación de iCloud Relay">
+                <br>
+                <div><a target="_blank" href="https://support.apple.com/es-es/guide/iphone/iph499d287c2/ios" >Más información</a></div>
+    
+                <div>
+                <button id="no">Cancelar</button>
+                <button class="outlined" id="si">Continuar</button>
+                </div>
+            </div>
+    
+        </div>
+
+        <div id="finish" class="backstage">
+            <div  class="popup">
+                <h1>Configuración</h1>
+                <p>Introduce tu correo de EducaMadrid.</p>
+                <form id="emailForm">
+                    <div class="email-container">
+                        <input type="text" 
+                            id="eduMail" 
+                            name="eduMail" 
+                            required 
+                            pattern="[a-zA-Z0-9\._\-]+" 
+                            placeholder="mail">
+                        <p class="email-suffix">@educa.madrid.org</p>
+                    </div>
+                    <br>
+                    <div>
+                        <input type="checkbox" id="acceptAll">
+                        <label for="acceptAll">Soy responsable del uso del correo de acuerdo a las condiciones de uso de EducaMadrid en clientes de correo.</label>
+                    </div>
+                    <br>
+                    <div>
+                        <input type="checkbox" id="travelOK">
+                        <label for="travelOK">Si me voy fuera de España o me conecto a una red extranjera (ej: iCloud Relay), desconectaré el servicio.</label>
+                    </div>
+                    <br>
+                    <div>
+                        <button type="button" class="outlined" id="cancelMail">Cancelar</button>
+                        <button type="submit" id="finishMail">Instalar</button>
+                    </div>
+                </form>
+            </div>
+        
+    </main>
+
+    
+    
+</body>
+<script src="/obj.installer/install.js"></script>
+</html>

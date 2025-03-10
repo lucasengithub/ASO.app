@@ -1,0 +1,460 @@
+@font-face {
+    font-family: P-Kiko;
+    src: url('/fonts/PKiko-Regular.otf') format('opentype');
+    font-style: normal;
+    font-weight:normal;
+};
+
+@font-face {
+    font-family: P-Kiko;
+    src: url('/fonts/PKiko-Light.otf') format('opentype');
+    font-style: normal;
+    font-weight:lighter;
+};
+
+@font-face {
+    font-family: P-Kiko;
+    src: url('/fonts/PKiko-RegularItalic.otf') format('opentype');
+    font-style: italic;
+    font-weight:normal;
+};
+
+@font-face {
+    font-family: P-Kiko;
+    src: url('/fonts/PKiko-LightItalic.otf') format('opentype');
+    font-style: italic;
+};
+
+@font-face {
+    font-family: DMMon;
+    src: url('/fonts/DMMono-Regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight:normal;
+};
+
+@font-face {
+    font-family: DMMono;
+    src: url('/fonts/DMMono-Italic.ttf') format('truetype');
+    font-style: italic;
+    font-weight:normal;
+};
+
+@font-face {
+    font-family: DMMono;
+    src: url('/fonts/DMMono-Medium.ttf') format('truetype');
+    font-style: normal;
+    font-weight:medium;
+};
+
+@font-face {
+    font-family: DMMono;
+    src: url('/fonts/DMMono-MediumItalic.ttf') format('truetype');
+    font-style: italic;
+    font-weight:medium;
+};
+
+@font-face {
+    font-family: DMMono;
+    src: url('/fonts/DMMono-Light.ttf') format('truetype');
+    font-style: normal;
+    font-weight:lighter;
+};
+
+
+@font-face {
+    font-family: NeueMontreal;
+    src: url('/fonts/NeueMontreal-Regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight:normal;
+};
+
+@font-face {
+    font-family: NeueMontreal;
+    src: url('/fonts/NeueMontreal-Italic.ttf') format('truetype');
+    font-style: italic;
+    font-weight:normal;
+};
+
+@font-face {
+    font-family: NeueMontreal;
+    src: url('/fonts/NeueMontreal-Bold.ttf') format('truetype');
+    font-style: normal;
+    font-weight:bold;
+};
+
+@font-face {
+    font-family: NeueMontreal;
+    src: url('/fonts/NeueMontreal-BoldItalic.ttf') format('truetype');
+    font-style: italic;
+    font-weight:bold;
+};
+
+@font-face {
+    font-family: NeueMontreal;
+    src: url('/fonts/NeueMontreal-Light.ttf') format('truetype');
+    font-style: normal;
+    font-weight:lighter;
+};
+
+@font-face {
+    font-family: NeueMontreal;
+    src: url('/fonts/NeueMontreal-LightItalic.ttf') format('truetype');
+    font-style: italic;
+    font-weight:lighter;
+};
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    pointer-events: none;
+    
+}
+
+a {
+    text-decoration: none;
+    color: #36e452;
+    transition: linear 0.1s;
+    text-decoration: underline;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    pointer-events: auto;
+}
+
+/* También es recomendable añadirlo al body para asegurar que se aplica globalmente */
+body {
+    background-color: #ffffff;
+    touch-action: pan-x pan-y;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-drag: none;
+    font-family: NeueMontreal, sans-serif;
+
+}
+
+main{
+    display: flex;
+    justify-content: left;
+    height: 100vh;
+    width: 100%;
+    flex-direction: column;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    flex-direction: column;
+}
+
+
+#aso-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #040406;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    
+    a {
+        text-decoration: none;
+        color: #FDFDFD;
+        padding: 10px;
+        text-transform: uppercase;
+        transition: linear 0.1s;
+        font-family: DMMono, monospace;
+    }
+    
+    a:hover {
+        color: #36e452;
+        transition: linear 0.1s;
+    }
+    
+    #n0 {
+        position: absolute;
+        left: 20px;
+    }
+    
+    #n1 {
+        position: relative;
+    }
+    
+    #n2 {
+        position: absolute;
+        right: 20px;
+    }
+}
+
+#head-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #040406;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+    
+    button {
+        text-decoration: none;
+        background-color: #040406;
+        text-align: left;
+        color: #FDFDFD;
+        padding: 10px;
+        width: 30px;
+        text-transform: uppercase;
+        transition: linear 0.1s;
+        font-family: DMMono, monospace;
+    }
+    
+    button:hover {
+        background-color: #36e452;
+        transition: linear 0.1s;
+    }
+    
+    
+}
+
+#notion-page{
+    padding-top: 100px;
+    display: flex;
+    align-items: left;  /* Añadido para centrar verticalmente */
+    justify-content: left; /* Cambiado a center */
+    align-self: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto; /* Añadido para centrar horizontalmente */
+    flex-direction: column;
+}
+
+h1{
+    font-family: P-Kiko, serif;
+    font-size: 2.5em;
+    color: #040406;
+    margin: 0;
+    padding: 0;
+}
+
+h2{
+    font-family: P-Kiko, serif;
+    font-style: italic;
+    font-size: 2em;
+    color: #040406;
+    margin: 20 0 10 0px;
+
+}
+
+h3{
+    font-family: P-Kiko, serif;
+    font-style: oblique;
+    font-size: 1.5em;
+    color: #424242;
+    margin: 20 0 10 0px;
+}
+
+h4{
+    font-family: DMMono, monospace;
+    font-size: 1.1em;
+    color: #040406;
+    margin: 20 0 10 0px;
+
+}
+
+.bookmark{
+    font-family: NeueMontreal, sans-serif;
+    font-size: 1em;
+    width: 100%;
+    text-align: left;
+    margin: 20 0px;
+    padding: 20px;
+    background-color: #FDFDFD;
+    border: #36e452 1px dotted;
+    box-sizing: border-box;
+    font-weight: thin;
+    color: #040406;
+
+}
+
+.notionpic{
+    width: 100%;
+    max-width: 500px;
+    margin: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    object-fit: contain;
+    align-self: center;
+}
+
+.notion-content{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: left; /* Cambiado a center */
+    align-items: left; /* Añadido para centrar elementos */
+    padding: 20px;
+    width: 100%;
+    max-width: 800px; /* Añadido para mantener consistencia */
+    margin: 0 auto; /* Añadido para centrar horizontalmente */
+}
+
+.bigaso{
+    font-family: P-Kiko, serif;
+    font-size: 1em;
+    color: #040406;
+    background-color: #36e452;
+    width: calc(100% - 20px); /* Compensar los márgenes */
+    text-align: left;
+    margin: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.backstage{
+    background-color: #00000084;
+    backdrop-filter: blur(10px);
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+
+}
+
+.popup{
+    position: fixed;
+    width: 60%;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    z-index: 601;
+    border-radius: 30px;
+    padding: 20px;
+    .simg{
+        width: 80%;
+        max-height: 50vh;
+        object-fit: contain;
+        align-self: center;
+    };
+
+    div{
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        max-width: 100%;
+        align-items: center
+    
+    };
+}
+
+#bCursor{
+    width: 50px;
+    height: 50px;
+    filter: blur(3px);
+    background-color: #36e452;
+    border-radius:60px;
+    transition: transform 150ms ease-in-out;
+    z-index: 999;
+    position: fixed;
+    pointer-events: none;
+    display: none;
+    top: -60px;
+
+    
+}
+
+button{
+    background-color: #36e452;
+    padding: 12px;
+    margin: 10px;
+    color: #040406;
+    border: 0;
+    width: 200px;
+    cursor: none;
+
+}
+
+button:disabled{
+    background-color: #36e452;
+    padding: 12px;
+    margin: 10px;
+    color: #040406;
+    border: 0;
+    width: 200px;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#geninstaller{
+    display: none;
+}
+
+input{
+    width: 95%;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #36e452;
+    background-color: #ffffff;
+    color: #040406;
+    font-family: DMMono, monospace;
+    cursor: none;
+    font-size: 16px
+
+}
+
+
+
+
+form{
+    cursor: none;
+    display: flex;
+    flex-direction: column;
+        justify-content: center;
+    align-items: center;
+}
+
+
+html{
+    font-family: NeueMontreal, sans-serif;
+    font-size: 16px;
+    color: #040406;
+    background-color: #ffffff;
+}
+
+.outlined{
+    background-color: #ffffff;
+    border: 1px solid #36e452;
+    color: #36e452;
+}
+
+
+@media screen and (min-width: 600px){
+    html{
+        cursor: none;
+    }
+    
+    a{
+        cursor: none;
+    }
+    
+    #bCursor{
+        display: block;
+    }
+}
+

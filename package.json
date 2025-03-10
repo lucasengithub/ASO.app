@@ -1,0 +1,25 @@
+{
+  "name": "aso.app",
+  "version": "1.0.0",
+  "description": "AsoAPP",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "tsc & npx nodemon dist/index.js"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@notionhq/client": "^2.2.16",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jquery": "^3.7.1",
+    "jsdom": "^26.0.0",
+    "material-symbols": "^0.29.0",
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.9"
+  }
+}

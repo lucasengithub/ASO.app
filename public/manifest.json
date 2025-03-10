@@ -1,0 +1,22 @@
+{
+	"name":"ASO.app",
+	"short_name":"ASO.app",
+	"start_url":"/app",
+	"display":"standalone",
+	"background_color":"#36e452",
+	"theme_color":"white",
+	"scope": ".",
+	"description":"La ASO.app reune todo lo que necesitas para la ESD.",
+	"icons":[
+	{
+	"src":"icons/192.png",					 
+	"sizes":"192x192",
+	"type":"image/png"
+	},
+	{
+	"src":"icons/512.png",
+	"sizes":"512x512",
+	"type":"image/png"
+	}
+]
+}

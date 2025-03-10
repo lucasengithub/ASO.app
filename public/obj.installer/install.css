@@ -1,0 +1,108 @@
+.formc{
+
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+
+    margin: auto;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    
+
+
+}
+
+#grp{
+text-align: left;
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin-bottom: 35px;
+margin-top: 20px;
+
+    
+}
+
+label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: DMMono, monospace;
+    white-space: normal;
+    overflow: visible;
+    width: 100%;
+    text-overflow: clip;
+}
+
+.popup div {
+    width: 100%;
+    white-space: normal;
+}
+
+
+#asoLogo{
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: block;
+    border-radius: 35px;
+}
+
+/* Estilos personalizados para checkboxes */
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+    border: 1px solid #36e452;
+    cursor: none;
+    outline: none;
+    transition: all 0.1s;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #36e452;
+    border: 1px solid #36e452;
+    transition: all 0.1s;
+
+
+}
+
+input[type="checkbox"]:active {
+    background-color: #36e452;
+    transition: all 0.1s;
+}
+
+#warn1{
+    display: none;
+}
+
+.email-container {
+    position: relative;
+    width: 100%;
+}
+
+.email-suffix {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    font-family: DMMono, monospace;
+    margin: 0;
+}
+
+#eduMail {
+    width: 100%;
+    padding-right: 150px; /* Espacio para el texto del dominio */
+}
+
+#finish {
+    display: none;
+
+}
