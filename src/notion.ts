@@ -111,7 +111,7 @@ async function getTableItems(blockId: string): Promise<string> {
             if (item.destino) {
                 return `<a href="${item.destino}" target="_blank"><button class="bigaso">${item.name}</button></a>`;
             } else if (item.pageId) {
-                return `<a href="/app/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+                return `<a href="/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
             }
             return '';
         }).join('\n');
@@ -157,7 +157,7 @@ export async function getNotionPage(pageId: string): Promise<string> {
             }
             if ('bookmark' in block) {
                 const title = await getWebsiteTitle(block.bookmark.url);
-                return `<a href="${block.bookmark.url}" target="_blank"><button class="bookmark"><i>${title}</i><b>Abrir.<b></button></a>`;
+                return `<a href="${block.bookmark.url}" target="_blank" class="bookmark0">${title}<p class="bookmark1">Abrir.</p></a>`;
             }
             if ('quote' in block) {
                 return `<blockquote>${block.quote.rich_text[0].plain_text}</blockquote>`;
@@ -171,8 +171,8 @@ export async function getNotionPage(pageId: string): Promise<string> {
             }
 
             if ('child_page' in block) {
-                return `<a href="/app/aadm/${block.id}" class="aadm-item">
-                    <button class="bigaso">${block.child_page.title}</button>
+                return `<a href="/app/i/${block.id}" class="aadm-item" style="text-decoration: none;">
+                    <p class="childpage">${block.child_page.title} <span class="material-symbols-outlined"> arrow_forward </span></p>
                 </a>`;
             }
 
