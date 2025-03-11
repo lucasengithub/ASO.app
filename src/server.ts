@@ -6,6 +6,7 @@ import { topData } from './navbar'
 import { cursorData } from './navbar'
 import { preventBack } from './navbar'
 import { getAADMItems, getNotionPage } from './notion';
+import { getEscuelaItems } from './notion';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -53,7 +54,41 @@ app.get('/app/aadm', async (req: Request, res: Response) => {
                 if (item.destino) {
                     return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
                 } else if (item.pageId) {
-                    return `<a href="/app/aadm/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+                    return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+                }
+                return '';
+            }).join('\n');
+
+            const modifiedData = data.replace(
+                '<div class="notion-content"></div>',
+                `<div class="notion-content">${itemsHtml}</div>`
+            );
+
+            navGen(modifiedData, res);
+        });
+    } catch (error) {
+        console.error('Error in aadm route:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/app/escuela', async (req: Request, res: Response) => {
+    try {
+        const items = await getEscuelaItems();
+        const indexPath = path.join(__dirname, '../public/escuela.html');
+        
+        fs.readFile(indexPath, 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading file:', err);
+                res.status(500).send('Error reading file');
+                return;
+            }
+
+            const itemsHtml = items.map(item => {
+                if (item.destino) {
+                    return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+                } else if (item.pageId) {
+                    return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
                 }
                 return '';
             }).join('\n');
@@ -82,7 +117,9 @@ app.get('/', (req: Request, res: Response) => {
     });
 });
 
-app.get('/app/aadm/:pageId', async (req: Request, res: Response) => {
+
+
+app.get('/app/i/:pageId', async (req: Request, res: Response) => {
     const pageContent = await getNotionPage(req.params.pageId);
     const content = `
 <!DOCTYPE html>
@@ -133,15 +170,7 @@ app.get('/app', (req: Request, res: Response) => {
     });
 });
 
-app.get('/app/escuela', (req: Request, res: Response) => {
-    fs.readFile(path.join(__dirname, '../public/escuela.html'), 'utf8', (err, data) => {
-        if (err) {
-            res.status(500).send('Error reading file');
-            return;
-        }
-        navGen(data, res);
-    });
-});
+
 
 
 app.get('/network', (req: Request, res: Response) => {

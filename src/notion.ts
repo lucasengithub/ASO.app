@@ -47,6 +47,31 @@ export async function getAADMItems(): Promise<AADMItem[]> {
     }
 }
 
+export async function getEscuelaItems(): Promise<AADMItem[]> {
+    try {
+        const response = await notion.databases.query({
+            database_id: process.env.ESCUELA_DATABASE_ID!
+        });
+
+        return response.results.map((page) => {
+            const p = page as PageObjectResponse;
+            const properties = p.properties;
+            
+            const nombreProp = properties['Nombre'] as { type: 'title'; title: Array<{ plain_text: string }> };
+            const destinoProp = properties['Destino'] as { type: 'url'; url: string | null };
+            
+            return {
+                name: nombreProp.title[0]?.plain_text || '',
+                destino: destinoProp.url || undefined,
+                pageId: destinoProp.url ? undefined : page.id
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching Escuela items:', error);
+        return [];
+    }
+}
+
 async function getWebsiteTitle(url: string): Promise<string> {
     try {
         const nodeFetch = await import('node-fetch');
