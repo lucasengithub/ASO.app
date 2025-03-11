@@ -131,7 +131,6 @@
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
-    pointer-events: none;
     
 }
 
@@ -146,7 +145,6 @@ a {
     pointer-events: auto;
 }
 
-/* También es recomendable añadirlo al body para asegurar que se aplica globalmente */
 body {
     background-color: #ffffff;
     touch-action: pan-x pan-y;
@@ -155,6 +153,7 @@ body {
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     -webkit-user-drag: none;
+    pointer-events: all;
     font-family: NeueMontreal, sans-serif;
 
 }
@@ -243,7 +242,6 @@ main{
         transition: linear 0.1s;
         font-family: DMMono, monospace;
         z-index: 20;
-        pointer-events: all;
     };
     
     button:hover {
