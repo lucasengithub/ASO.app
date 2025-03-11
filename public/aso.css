@@ -364,7 +364,7 @@ h4{
 
 .popup{
     position: fixed;
-    width: 60%;
+    width: 85%;
     background-color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;
@@ -482,5 +482,10 @@ html{
     #bCursor{
         display: block;
     }
+
+    .popup{
+        width: 60%;
+    }
+
 }
 
