@@ -338,6 +338,14 @@ form{
     align-items: center;
 }
 
+#aso-settings{
+    place-self: center;
+    padding-top: 30px;
+    font-size: 1.2em;
+    text-decoration: dotted;
+    color: #040406;
+}
+
 /*** Específicos de Notion ***/
 
 .bookmark0{

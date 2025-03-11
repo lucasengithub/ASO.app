@@ -7,6 +7,7 @@ import { cursorData } from './navbar'
 import { preventBack } from './navbar'
 import { getAADMItems, getNotionPage } from './notion';
 import { getEscuelaItems } from './notion';
+import { getHomeItems } from './notion';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -160,18 +161,36 @@ app.get('/inst/step1', (req: Request, res: Response) => {
     });
 });
 
-app.get('/app', (req: Request, res: Response) => {
-    fs.readFile(path.join(__dirname, '../public/index.html'), 'utf8', (err, data) => {
-        if (err) {
-            res.status(500).send('Error reading file');
-            return;
-        }
-        navGen(data, res);
-    });
+app.get('/app', async (req: Request, res: Response) => {
+    try {
+        const items = await getHomeItems();
+        const indexPath = path.join(__dirname, '../public/index.html');
+        
+        fs.readFile(indexPath, 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Error reading file');
+                return;
+            }
+            const itemsHtml = items.map(item => {
+                if (item.destino) {
+                    return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+                } else if (item.pageId) {
+                    return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+                }
+                return '';
+            }).join('\n');
+
+            const modifiedData = data.replace(
+                '<div class="notion-content"></div>',
+                `<div class="notion-content">${itemsHtml}</div>`
+            );
+            navGen(modifiedData, res);
+        });
+    } catch (error) {
+        console.error('Error en la ruta /app:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
-
-
-
 
 app.get('/network', (req: Request, res: Response) => {
     fs.readFile(path.join(__dirname, '../public/netfail.html'), 'utf8', (err, data) => {
