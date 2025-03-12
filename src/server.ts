@@ -11,20 +11,18 @@ dotenv.config();
 
 const app = express()
 
-// Función para obtener y parsear el RSS feed en HTML.
 async function getRSSFeedHTML(): Promise<string> {
     try {
         const response = await fetch(process.env.URL_ASO_FEED as string);
         const str = await response.text();
         const parsed = await parseStringPromise(str);
         let html = "";
-        // Se asume que el feed sigue la estructura standar de RSS
         const items = parsed.rss.channel[0].item;
         items.forEach((item: any) => {
             const title = item.title[0];
             const link = item.link[0];
             const description = item.description[0];
-            html += `<div><a href="${link}" target="_blank"><button class="bigaso">${title}\n<p>${description}<p></button></a></div>`;
+            html += `<div><a href="${link}" target="_blank" style="text-decoration: none;"><button class="bigPost">${title}\n<p>${description}<p></button></a></div>`;
         });
         return html;
     } catch (err) {
@@ -33,7 +31,26 @@ async function getRSSFeedHTML(): Promise<string> {
     }
 }
 
-// Nav Gen genera la misma barra de navegación, de arriba y carga el CSS en todas las páginas
+async function getESDRSSFeedHTML(): Promise<string> {
+    try {
+        const response = await fetch(process.env.URL_ESD_FEED as string);
+        const str = await response.text();
+        const parsed = await parseStringPromise(str);
+        let html = "";
+        const items = parsed.rss.channel[0].item;
+        items.forEach((item: any) => {
+            const title = item.title[0];
+            const badLink = item.link[0];
+            const link = badLink.replace('https://admin-dev.esdmadrid.es/', 'https://esdmadrid.es/posts/');
+            html += `<div><a href="${link}" target="_blank" style="text-decoration: none;"><button class="squarePost"></img>${title}</button></a></div>`;
+        });
+        return html;
+    } catch (err) {
+        console.error("Error al cargar el feed ESD:", err);
+        return "No se pudo cargar el feed ESD.";
+    }
+}
+
 const navGen = (content: string | string[], res: Response) => {
     let data = typeof content === 'string' ? content : content.join('');
     const modifiedData = data
@@ -200,11 +217,18 @@ app.get('/app', async (req: Request, res: Response) => {
             `<div class="notion-content">${itemsHtml}</div>`
         );
 
-        // Inyecta el RSS feed obtenido del servidor
+        // Inyecta el RSS feed original
         const rssHtml = await getRSSFeedHTML();
         data = data.replace(
             '<div id="rss-feed">Cargando RSS...</div>',
             `<div id="rss-feed">${rssHtml}</div>`
+        );
+        
+        // Inyecta el nuevo feed ESD
+        const esdHtml = await getESDRSSFeedHTML();
+        data = data.replace(
+            '<div class="esd-feed"></div>',
+            `<div class="esd-feed">${esdHtml}</div>`
         );
 
         navGen(data, res);
