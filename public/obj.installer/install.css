@@ -14,6 +14,11 @@
 
 }
 
+form{
+    justify-content: center;
+    align-items: center;
+}
+
 #grp{
 text-align: left;
 display: flex;

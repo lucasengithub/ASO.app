@@ -166,8 +166,8 @@ app.get('/app/i/:pageId', async (req: Request, res: Response) => {
     <title>aso.app</title>
 </head>
 <body>
+    <div id="head-bar"></div>
     <main>
-        <div id="head-bar"></div>
         <div id="notion-page">${pageContent}</div>
     </main>
 </body>
@@ -247,6 +247,16 @@ app.get('/network', (req: Request, res: Response) => {
         navGen(data, res);
     }
 );
+});
+
+app.get('/app/o/reclamaciones', (req: Request, res: Response) => {
+    fs.readFile(path.join(__dirname, '../public/o/reclamaciones.html'), 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).send('Error reading file');
+            return;
+        }
+        navGen(data, res);
+    });
 });
 
 

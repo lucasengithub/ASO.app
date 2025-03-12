@@ -335,8 +335,7 @@ form{
     cursor: none;
     display: flex;
     flex-direction: column;
-        justify-content: center;
-    align-items: center;
+
 }
 
 #aso-settings{
@@ -433,6 +432,9 @@ form{
     gap: 20px;
 }
 
+.reclamaciones{
+
+}
 /** Clases **/
 
 .center{

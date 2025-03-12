@@ -84,7 +84,7 @@
                 if (elements.checkboxCorreo.checked) {
                     await checkEducaMadridConnection();
                 } else {
-                    window.location.href = "inst/ASO.app";
+                    window.location.href = "/obj.installer/ios/ASO.app.mobileconfig";
                 }
             }
         });
