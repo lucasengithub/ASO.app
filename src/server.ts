@@ -1,19 +1,37 @@
 import express, { Request, Response, NextFunction } from 'express'
 import path from 'path'
 import fs from 'fs'
-import { barData } from './navbar'
-import { topData } from './navbar'
-import { cursorData } from './navbar'
-import { preventBack } from './navbar'
+import { barData, topData, cursorData, preventBack } from './navbar'
 import { getAADMItems, getNotionPage } from './notion';
-import { getEscuelaItems } from './notion';
-import { getHomeItems } from './notion';
+import { getEscuelaItems, getHomeItems } from './notion';
 import dotenv from 'dotenv';
+import { parseStringPromise } from 'xml2js'; // <-- Agregado
 
 dotenv.config();
 
 const app = express()
 
+// Función para obtener y parsear el RSS feed en HTML.
+async function getRSSFeedHTML(): Promise<string> {
+    try {
+        const response = await fetch(process.env.URL_ASO_FEED as string);
+        const str = await response.text();
+        const parsed = await parseStringPromise(str);
+        let html = "";
+        // Se asume que el feed sigue la estructura standar de RSS
+        const items = parsed.rss.channel[0].item;
+        items.forEach((item: any) => {
+            const title = item.title[0];
+            const link = item.link[0];
+            const description = item.description[0];
+            html += `<div><a href="${link}" target="_blank"><button class="bigaso">${title}\n<p>${description}<p></button></a></div>`;
+        });
+        return html;
+    } catch (err) {
+        console.error("Error al cargar el feed RSS:", err);
+        return "No se pudo cargar el feed RSS.";
+    }
+}
 
 // Nav Gen genera la misma barra de navegación, de arriba y carga el CSS en todas las páginas
 const navGen = (content: string | string[], res: Response) => {
@@ -165,27 +183,31 @@ app.get('/app', async (req: Request, res: Response) => {
     try {
         const items = await getHomeItems();
         const indexPath = path.join(__dirname, '../public/index.html');
-        
-        fs.readFile(indexPath, 'utf8', (err, data) => {
-            if (err) {
-                res.status(500).send('Error reading file');
-                return;
-            }
-            const itemsHtml = items.map(item => {
-                if (item.destino) {
-                    return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                } else if (item.pageId) {
-                    return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                }
-                return '';
-            }).join('\n');
+        let data = await fs.promises.readFile(indexPath, 'utf8');
 
-            const modifiedData = data.replace(
-                '<div class="notion-content"></div>',
-                `<div class="notion-content">${itemsHtml}</div>`
-            );
-            navGen(modifiedData, res);
-        });
+        const itemsHtml = items.map(item => {
+            if (item.destino) {
+                return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+            } else if (item.pageId) {
+                return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+            }
+            return '';
+        }).join('\n');
+
+        // Inyecta el contenido de notion
+        data = data.replace(
+            '<div class="notion-content"></div>',
+            `<div class="notion-content">${itemsHtml}</div>`
+        );
+
+        // Inyecta el RSS feed obtenido del servidor
+        const rssHtml = await getRSSFeedHTML();
+        data = data.replace(
+            '<div id="rss-feed">Cargando RSS...</div>',
+            `<div id="rss-feed">${rssHtml}</div>`
+        );
+
+        navGen(data, res);
     } catch (error) {
         console.error('Error en la ruta /app:', error);
         res.status(500).send('Internal Server Error');
