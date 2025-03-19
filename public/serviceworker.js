@@ -1,7 +1,3 @@
-
-
-
-// filepath: /Users/lucaspeinado/aso.app/public/serviceworker.js
 var staticCacheName = "pwa";
 
 self.addEventListener("install", function (e) {
@@ -34,10 +30,23 @@ self.addEventListener("fetch", function (e) {
                 return response;
             })
             .catch(function () {
-                // Sin conexión: se intenta la versión cacheada y, en caso de no existir, se redirige a "/network"
+                // Sin conexión: se intenta la versión cacheada o se redirige a "/network"
                 return caches.match(e.request).then(function (response) {
                     return response || caches.match("/network");
                 });
             })
     );
+});
+
+self.addEventListener('message', function(event) {
+    if (event.data && event.data.action === 'clearCache') {
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    return caches.delete(cacheName);
+                })
+            );
+        });
+        console.log('Cache borrado');
+    }
 });
