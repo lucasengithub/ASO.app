@@ -4,13 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>aso.app</title>
+    <!-- Importar Signature Pad y jsPDF -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        /* Ajustes para que el canvas se vea bien */
+        #firmaPad {
+            border: 1px solid #000;
+            touch-action: none;
+        }
+    </style>
 </head>
 <body>
     <div id="head-bar"></div>
-    <script>alert('Página en pruebas, no funciona')</script>
+    <script>alert('Página en pruebas, no funciona');</script>
     <main style="padding-top: 100px;">
         <h1>Reclamaciones</h1>
-        <form class="reclamaciones">
+        <form class="reclamaciones" id="reclamacionesForm">
             <label for="Nombre">Nombre</label>
             <input type="text" name="Nombre" id="Nombre">
             <label for="Apellidos">Apellidos</label>
@@ -24,19 +34,79 @@
             <label for="tel">Teléfono</label>
             <input type="tel" name="tel" id="tel">
             <label for="expone">Expone</label>
-            <textarea name="expone" id="expone" rows="30"></textarea>
+            <textarea name="expone" id="expone" rows="10"></textarea>
             <label for="solicita">Solicita</label>
-            <textarea name="solicita" id="solicita" rows="30"></textarea>
+            <textarea name="solicita" id="solicita" rows="10"></textarea>
             <label for="documentos">Documentación Adjunta</label>
-            <textarea name="documentos" id="documentos" rows="10"></textarea>
+            <textarea name="documentos" id="documentos" rows="5"></textarea>
             <label for="lugar">Lugar</label>
             <input type="text" name="lugar" id="lugar">
-            <label for="fecha">Ciudad</label>
+            <label for="fecha">Ciudad (Fecha)</label>
             <input type="date" name="fecha" id="fecha">
-            <label for="firma">Firma</label>
-            <input type="text" name="firma" id="firma">
+
+            <label for="firma">Firma (dibujar abajo)</label>
+            <canvas id="firmaPad" width="300" height="150"></canvas>
+            <button type="button" id="clearSignature">Limpiar firma</button>
+            <br>
             <button type="submit">Enviar</button>
         </form>
     </main>
+
+    <script>
+        // Inicializar Signature Pad
+        const canvas = document.getElementById('firmaPad');
+        const signaturePad = new SignaturePad(canvas);
+
+        // Botón para limpiar la firma
+        document.getElementById('clearSignature').addEventListener('click', () => {
+            signaturePad.clear();
+        });
+
+        // Manejo del formulario y generación del PDF
+        document.getElementById('reclamacionesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Obtener datos del formulario
+            const formData = {
+                Nombre: document.getElementById('Nombre').value,
+                Apellidos: document.getElementById('Apellidos').value,
+                NIF: document.getElementById('NIF').value,
+                ESP: document.getElementById('ESP').value,
+                mail: document.getElementById('mail').value,
+                tel: document.getElementById('tel').value,
+                expone: document.getElementById('expone').value,
+                solicita: document.getElementById('solicita').value,
+                documentos: document.getElementById('documentos').value,
+                lugar: document.getElementById('lugar').value,
+                fecha: document.getElementById('fecha').value
+            };
+
+            // Obtener la imagen de la firma
+            let firmaImg = '';
+            if (!signaturePad.isEmpty()) {
+                firmaImg = canvas.toDataURL();
+            }
+
+            // Crear el PDF usando jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            let y = 10;
+            doc.setFontSize(12);
+            for (const key in formData) {
+                doc.text(`${key}: ${formData[key]}`, 10, y);
+                y += 10;
+            }
+            // Insertar imagen de la firma si existe
+            if (firmaImg !== '') {
+                doc.text("Firma:", 10, y);
+                y += 10;
+                doc.addImage(firmaImg, 'PNG', 10, y, 80, 40);
+            }
+
+            // Descargar el PDF
+            doc.save("ExponeSolicita.pdf");
+        });
+    </script>
 </body>
 </html>

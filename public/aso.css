@@ -318,9 +318,7 @@ button:disabled{
 }
 
 input{
-    width: 95%;
     padding: 10px;
-    margin: 10px;
     border: 1px solid #36e452;
     background-color: #ffffff;
     color: #040406;
@@ -330,12 +328,35 @@ input{
 
 }
 
+label{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: DMMono, monospace;
+    white-space: normal;
+    overflow: visible;
+    width: 100%;
+    text-overflow: clip;
+}
+
 
 form{
+    width: 100%;
     cursor: none;
+    gap: 10px;
     display: flex;
     flex-direction: column;
+}
 
+textarea{
+    padding: 10px;
+    border: 1px solid #36e452;
+    background-color: #ffffff;
+    color: #040406;
+    font-family: DMMono, monospace;
+    cursor: none;
+    font-size: 16px;
+    resize: none;
 }
 
 #aso-settings{
@@ -433,6 +454,7 @@ form{
 }
 
 .reclamaciones{
+    
 
 }
 /** Clases **/
@@ -459,7 +481,7 @@ form{
     width: 100%;
     text-align: left;
     margin: 0;
-    padding: 18px;
+    padding: 18px 10px;
     box-sizing: border-box;
 }
 
