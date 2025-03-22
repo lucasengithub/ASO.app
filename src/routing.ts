@@ -90,140 +90,66 @@ export const routing = (app: any) => {
     );
     });
 
-    app.get('/app/aadm', async (req: Request, res: Response) => {
-        try {
-            const items = await getAADMItems();
-            const indexPath = path.join(__dirname, '../public/aadm.html');
-            
-            fs.readFile(indexPath, 'utf8', (err, data) => {
-                if (err) {
-                    console.error('Error reading file:', err);
-                    res.status(500).send('Error reading file');
-                    return;
-                }
-
-                const itemsHtml = items.map(item => {
-                    if (item.destino) {
-                        return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                    } else if (item.pageId) {
-                        return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                    }
-                    return '';
-                }).join('\n');
-
-                const modifiedData = data.replace(
-                    '<div class="notion-content"></div>',
-                    `<div class="notion-content">${itemsHtml}</div>`
-                );
-
-                navGen(modifiedData, res);
-            });
-        } catch (error) {
-            console.error('Error in aadm route:', error);
-            res.status(500).send('Internal Server Error');
-        }
-    });
-
     app.get('/app/escuela', async (req: Request, res: Response) => {
         try {
             const items = await getEscuelaItems();
             const indexPath = path.join(__dirname, '../public/escuela.html');
-            
-            fs.readFile(indexPath, 'utf8', (err, data) => {
-                if (err) {
-                    console.error('Error reading file:', err);
-                    res.status(500).send('Error reading file');
-                    return;
+
+            let modData = await fs.promises.readFile(indexPath, 'utf8');
+
+            const itemsHtml = items.map(item => {
+                if (item.destino) {
+                    return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
+                } else if (item.pageId) {
+                    return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 }
+                return '';
+            }).join('\n');
 
-                const itemsHtml = items.map(item => {
-                    if (item.destino) {
-                        return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                    } else if (item.pageId) {
-                        return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                    }
-                    return '';
-                }).join('\n');
+            // Inyecta el contenido de notion
+            modData = modData.replace(
+                '<div class="notion-content"></div>',
+                `<div class="notion-content">${itemsHtml}</div>`
+            );
 
-                const modifiedData = data.replace(
-                    '<div class="notion-content"></div>',
-                    `<div class="notion-content">${itemsHtml}</div>`
-                );
 
-                navGen(modifiedData, res);
-            });
+
+            navGen(modData, res);
         } catch (error) {
-            console.error('Error in aadm route:', error);
+            console.error('Error en la ruta /escuela:', error);
             res.status(500).send('Internal Server Error');
         }
     });
-
 
     app.get('/app/aadm', async (req: Request, res: Response) => {
         try {
             const items = await getAADMItems();
             const indexPath = path.join(__dirname, '../public/aadm.html');
-            
-            fs.readFile(indexPath, 'utf8', (err, data) => {
-                if (err) {
-                    console.error('Error reading file:', err);
-                    res.status(500).send('Error reading file');
-                    return;
+
+            let modData = await fs.promises.readFile(indexPath, 'utf8');
+
+            const itemsHtml = items.map(item => {
+                if (item.destino) {
+                    return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
+                } else if (item.pageId) {
+                    return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 }
+                return '';
+            }).join('\n');
 
-                const itemsHtml = items.map(item => {
-                    if (item.destino) {
-                        return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                    } else if (item.pageId) {
-                        return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                    }
-                    return '';
-                }).join('\n');
+            // Inyecta el contenido de notion
+            modData = modData.replace(
+                '<div class="notion-content"></div>',
+                `<div class="notion-content">${itemsHtml}</div>`
+            );
 
-                const modifiedData = data.replace(
-                    '<div class="notion-content"></div>',
-                    `<div class="notion-content">${itemsHtml}</div>`
-                );
-
-                navGen(modifiedData, res);
-            });
+            navGen(modData, res);
         } catch (error) {
-            console.error('Error in aadm route:', error);
+            console.error('Error en la ruta /aadm:', error);
             res.status(500).send('Internal Server Error');
         }
-    });
+    }
+    );
+    
 
-    app.get('/app/escuela', async (req: Request, res: Response) => {
-        try {
-            const items = await getEscuelaItems();
-            const indexPath = path.join(__dirname, '../public/escuela.html');
-            
-            fs.readFile(indexPath, 'utf8', (err, data) => {
-                if (err) {
-                    console.error('Error reading file:', err);
-                    res.status(500).send('Error reading file');
-                    return;
-                }
-
-                const itemsHtml = items.map(item => {
-                    if (item.destino) {
-                        return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                    } else if (item.pageId) {
-                        return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-                    }
-                    return '';
-                }).join('\n');
-
-                const modifiedData = data.replace(
-                    '<div class="notion-content"></div>',
-                    `<div class="notion-content">${itemsHtml}</div>`
-                );
-
-                navGen(modifiedData, res);
-            });
-        } catch (error) {
-            console.error('Error in aadm route:', error);
-            res.status(500).send('Internal Server Error');
-        }
-    })
 }

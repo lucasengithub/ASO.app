@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import http from 'http';
 import { getNotionPage } from './notion';
 import dotenv from 'dotenv';
 import { navGen } from './inyeccion';
@@ -9,6 +8,11 @@ import { routing } from './routing';
 
 dotenv.config();
 const app = express();
+
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    next();
+});
 
 // Rutas de la aplicación
 routing(app);

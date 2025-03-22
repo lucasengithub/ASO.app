@@ -1,8 +1,6 @@
 import { Client } from '@notionhq/client';
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
-// Eliminar la importación existente de node-fetch y reemplazarla con una declaración
-declare const fetch: any;
 
 if (!process.env.NOTION_KEY) {
     throw new Error('NOTION_KEY is not defined in environment variables');
@@ -20,6 +18,7 @@ export interface AADMItem {
     name: string;
     destino?: string;
     pageId?: string;
+    icono?: string;
 }
 
 export async function getAADMItems(): Promise<AADMItem[]> {
@@ -34,11 +33,13 @@ export async function getAADMItems(): Promise<AADMItem[]> {
             
             const nombreProp = properties['Nombre'] as { type: 'title'; title: Array<{ plain_text: string }> };
             const destinoProp = properties['Destino'] as { type: 'url'; url: string | null };
+            const iconoProp = properties['Icono'] as { type?: 'rich_text'; rich_text?: Array<{ plain_text: string }> };
             
             return {
                 name: nombreProp.title[0]?.plain_text || '',
                 destino: destinoProp.url || undefined,
-                pageId: destinoProp.url ? undefined : page.id
+                pageId: destinoProp.url ? undefined : page.id,
+                icono: iconoProp?.rich_text?.map(t => t.plain_text).join('') || '',
             };
         });
     } catch (error) {
@@ -59,11 +60,13 @@ export async function getEscuelaItems(): Promise<AADMItem[]> {
             
             const nombreProp = properties['Nombre'] as { type: 'title'; title: Array<{ plain_text: string }> };
             const destinoProp = properties['Destino'] as { type: 'url'; url: string | null };
+            const iconoProp = properties['Icono'] as { type?: 'rich_text'; rich_text?: Array<{ plain_text: string }> };
             
             return {
                 name: nombreProp.title[0]?.plain_text || '',
                 destino: destinoProp.url || undefined,
-                pageId: destinoProp.url ? undefined : page.id
+                pageId: destinoProp.url ? undefined : page.id,
+                icono: iconoProp?.rich_text?.map(t => t.plain_text).join('') || '',
             };
         });
     } catch (error) {
@@ -98,56 +101,7 @@ export async function getHomeItems(): Promise<AADMItem[]> {
     }
 }
 
-async function getWebsiteTitle(url: string): Promise<string> {
-    try {
-        const nodeFetch = await import('node-fetch');
-        const fetch = nodeFetch.default;
-        const response = await fetch(url);
-        const html = await response.text();
-        const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-        return titleMatch ? titleMatch[1] : url;
-    } catch (error) {
-        console.error('Error fetching website title:', error);
-        return url;
-    }
-}
 
-async function getTableItems(blockId: string): Promise<string> {
-    try {
-        const response = await notion.databases.query({
-            database_id: blockId
-        });
-
-        const items = response.results.map((page) => {
-            const p = page as PageObjectResponse;
-            const properties = p.properties;
-            
-            // Asumimos que todas las tablas tienen una columna 'Nombre'
-            const nombreProp = properties['Nombre'] as { type: 'title'; title: Array<{ plain_text: string }> };
-            const destinoProp = properties['Destino'] as { type: 'url'; url: string | null };
-            
-            return {
-                name: nombreProp.title[0]?.plain_text || '',
-                destino: destinoProp.url || undefined,
-                pageId: destinoProp.url ? undefined : page.id
-            };
-        });
-
-        const itemsHtml = items.map(item => {
-            if (item.destino) {
-                return `<a href="${item.destino}" target="_blank"><button class="bigaso">${item.name}</button></a>`;
-            } else if (item.pageId) {
-                return `<a href="/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
-            }
-            return '';
-        }).join('\n');
-
-        return `<div class="notion-content">${itemsHtml}</div>`;
-    } catch (error) {
-        console.error('Error fetching table items:', error);
-        return '';
-    }
-}
 
 export async function getNotionPage(pageId: string): Promise<string> {
     try {
@@ -156,44 +110,96 @@ export async function getNotionPage(pageId: string): Promise<string> {
         });
 
         const processedBlocks = await Promise.all(blocks.results.map(async block => {
-            if ('paragraph' in block) {
-                return `<p>${block.paragraph.rich_text.map(t => t.plain_text).join('')}</p>`;
+            // Add this helper function at the top of the file
+            function renderRichText(richText: any[]): string {
+                return richText.map(textItem => {
+                    let content = textItem.plain_text;
+                    const annotations = textItem.annotations;
+                    
+                    // Aplicar formato básico
+                    if (annotations.bold) content = `<b>${content}</b>`;
+                    if (annotations.italic) content = `<i>${content}</i>`;
+                    if (annotations.underline) content = `<u>${content}</u>`;
+                    if (annotations.strikethrough) content = `<s>${content}</s>`;
+                    
+                    if (textItem.href) {
+                        content = `<a href="${textItem.href}" target="_blank">${content}</a>`;
+                    }
+
+                    const hasColor = annotations.color !== 'default';
+                    const hasBackground = annotations.color.endsWith('_background');
+
+                    if (hasColor || hasBackground) {
+                        let extra = '';
+                        if (hasColor && !hasBackground) {
+                            extra = ` class="notion-color-${annotations.color}"`;
+                        }
+                        if (hasBackground) {
+                            const bgColor = annotations.color.replace('_background', '');
+                            extra = ` style="background-color: ${bgColor};"`;
+                        }
+                        return `<span${extra}>${content}</span>`;
+                    }
+                    return content;
+                }).join('');
             }
+            
+            // Update the paragraph handler
+            if ('paragraph' in block) {
+                return `<p>${renderRichText(block.paragraph.rich_text)}</p>`;
+            }
+            
+            // Update heading handlers
             if ('heading_1' in block) {
-                return `<h1>${block.heading_1.rich_text.map((t: { plain_text: string }) => t.plain_text).join('')}</h1>`;
+                return `<h1>${renderRichText(block.heading_1.rich_text)}</h1>`;
             }
             if ('heading_2' in block) {
-                return `<h2>${block.heading_2.rich_text.map((t: { plain_text: string }) => t.plain_text).join('')}</h2>`;
+                return `<h2>${renderRichText(block.heading_2.rich_text)}</h2>`;
             }
             if ('heading_3' in block) {
-                return `<h3>${block.heading_3.rich_text.map((t: { plain_text: string }) => t.plain_text).join('')}</h3>`;
+                return `<h3>${renderRichText(block.heading_3.rich_text)}</h3>`;
             }
+            
+            // Update list items
             if ('bulleted_list_item' in block) {
-                return `<li>${block.bulleted_list_item.rich_text.map((t: { plain_text: string }) => t.plain_text).join('')}</li>`;
+                return `<li>${renderRichText(block.bulleted_list_item.rich_text)}</li>`;
             }
-            if ('numbered_list_item' in block) { 
-                return '';
+
+            if ('numbered_list_item' in block) {
+                return `<li>${renderRichText(block.numbered_list_item.rich_text)}</li>`;
             }
+
+            
+            // Update to-do items
             if ('to_do' in block) {
-                return `<input type="checkbox" ${block.to_do.checked ? 'checked' : ''} disabled>${block.to_do.rich_text[0].plain_text}`;
+                return `<input type="checkbox" ${block.to_do.checked ? 'checked' : ''} disabled>
+                        ${renderRichText(block.to_do.rich_text)}`;
             }
-            if ('image' in block) {
-                const imageUrl = block.image.type === 'file' ? block.image.file.url : block.image.external.url;
-                return `<img class="notionpic" src="${imageUrl}" alt="${block.image.caption[0]?.plain_text || ''}">`;
-            }
-            if ('bookmark' in block) {
-                const title = await getWebsiteTitle(block.bookmark.url);
-                return `<a href="${block.bookmark.url}" target="_blank" class="bookmark0">${title}<p class="bookmark1">Abrir.</p></a>`;
-            }
+            
+            // Update quote blocks
             if ('quote' in block) {
-                return `<blockquote>${block.quote.rich_text[0].plain_text}</blockquote>`;
+                return `<blockquote>${renderRichText(block.quote.rich_text)}</blockquote>`;
             }
+            
+
+            if ('bookmark' in block) {
+                const url = block.bookmark.url;
+                return `<div><a href="${url}" target="_blank" style="text-decoration: none;">
+                    <button class="bigPost"><h4>Abrir.</h4>\n<p>${url}<p></button></a></div>`;
+            }
+
+            // Update code blocks
             if ('code' in block) {
-                return `<pre><code>${block.code.rich_text}</code></pre>`;
+                return `<pre><code>${renderRichText(block.code.rich_text)}</code></pre>`;
             }
 
             if ('divider' in block) {
                 return '<hr>';
+            }
+
+            if ('embed' in block) {
+                const url = block.embed.url;
+                return `<iframe src="${url}" frameborder="0"></iframe>`;
             }
 
             if ('child_page' in block) {
@@ -202,9 +208,6 @@ export async function getNotionPage(pageId: string): Promise<string> {
                 </a>`;
             }
 
-            if ('child_database' in block) {
-                return await getTableItems(block.id);
-            }
         }));
 
         return processedBlocks.join('\n');

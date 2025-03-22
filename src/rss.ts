@@ -2,7 +2,9 @@ import { parseStringPromise } from 'xml2js'
 
 export async function getRSSFeedHTML(): Promise<string> {
     try {
-        const response = await fetch(process.env.URL_ASO_FEED as string);
+        // Agrega un parámetro para evitar cache
+        const url = process.env.URL_ASO_FEED + `?cb=${Date.now()}`;
+        const response = await fetch(url);
         const str = await response.text();
         const parsed = await parseStringPromise(str);
         let html = "";
@@ -11,7 +13,7 @@ export async function getRSSFeedHTML(): Promise<string> {
             const title = item.title[0];
             const link = item.link[0];
             const description = item.description[0];
-            html += `<div><a href="${link}" target="_blank" style="text-decoration: none;"><button class="bigPost">${title}\n<p>${description}<p></button></a></div>`;
+            html += `<div><a href="${link}" target="_blank" style="text-decoration: none;"><button class="bigPost"><h4>${title}</h4>\n<p>${description}<p></button></a></div>`;
         });
         return html;
     } catch (err) {

@@ -106,13 +106,6 @@
 };
 
 /** General **/
-.material-symbols-outlined {
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
-  }
 
 * {
     -webkit-touch-callout: none;
@@ -140,10 +133,11 @@ body {
 main{
     display: flex;
     justify-content: left;
-    height: calc(100vh - 100px);
+/*    height: calc(100vh - 100px); - a lo mejor se quita */
     width: calc(100% - 60px);
     margin: 30px;
     flex-direction: column;
+    margin-bottom: 90px; /* Añadido para que no se solape con el aso-bar, culpable de eliminar lo de arriba */
 }
 
 #bCursor{  /* Cursor verde */
@@ -231,7 +225,6 @@ a {
     border-bottom: 1px solid #36e452;
     
     button{
-        text-decoration: none;
         background-color: #FDFDFD;
         text-align: center;
         color: #36e452;
@@ -241,6 +234,8 @@ a {
         transition: linear 0.1s;
         font-family: DMMono, monospace;
         z-index: 20;
+
+        
     };
     
     button:hover {
@@ -369,26 +364,7 @@ textarea{
 
 /*** Específicos de Notion ***/
 
-.bookmark0{
-    text-decoration: none;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    font-style: normal;
-    font-family: NeueMontreal, sans-serif;
-    font-size: 1.5em;
-    color: #040406;
-}
-.bookmark1{
-    text-decoration: none;
-    font-family: DM Mono, monospace;
-    border-top: 1px solid #36e452;
-    color: #36e452;
-    margin-top: -2px;
-    gap: 0px;
-}
+
 
 .notionpic{
     width: 100%;
@@ -453,10 +429,7 @@ textarea{
     gap: 20px;
 }
 
-.reclamaciones{
-    
 
-}
 /** Clases **/
 
 .center{
@@ -483,6 +456,25 @@ textarea{
     margin: 0;
     padding: 18px 10px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+    justify-content: left;
+    overflow: hidden;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    
+    *{
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis;
+    }
+
+    .material-symbols-outlined{
+        font-weight: 100;
+    }
 }
 
 .backstage{
@@ -540,12 +532,9 @@ textarea{
 }
 
 .bigPost{
-    font-family: P-Kiko, serif;
     display: flex;
     flex-direction: column;
-    font-size: 1.8em;
     background-color: #040406;
-    color: #36e452;
     width: 100%;
     margin: 0;
     margin-bottom: 10px;
@@ -553,11 +542,30 @@ textarea{
     align-items: left;
     text-align: left;
     box-sizing: border-box;
+    gap: 10px;
+    *{
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis;
+        color: #36e452;
+    }
+
+    h4{
+        font-size: 1.8em;
+        font-family: P-Kiko, serif;
+        margin: 0;
+        padding: 0;
+
+    }
 
     p{
         margin: 0;
         text-decoration: none;
-        color:#FDFDFD
+        color:#FDFDFD;
+        font-family: P-Kiko, serif;
+
+
+
 
     }
 }
@@ -614,6 +622,31 @@ textarea{
         display: grid;
         grid-template-columns: 1fr 1fr;
         width: 100%;
+    }
+
+    .squarePost{
+        font-family: P-Kiko, serif;
+        display: flex;
+        flex-direction: column;
+        font-size: 1em;
+        background-color: #36e452;
+        color: #040406;
+        width: 260px; /* Teniendo cuenta el main y el gap */
+        height: 260px; /* Teniendo cuenta el main y el gap */
+        margin: 0;
+        margin-bottom: 10px;
+        padding: 10px;
+        align-items: left;
+        text-align: left;
+        box-sizing: border-box;
+        overflow: hidden;
+    
+        p{
+            margin: 0;
+            text-decoration: none;
+            color:#FDFDFD
+    
+        }
     }
 
 }

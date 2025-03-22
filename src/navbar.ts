@@ -18,24 +18,10 @@ export const barData = (
 )
 
 export const topData = (
-    `<button id="last" onclick="customBack()">×</button>
+    `<button id="last" onclick="customBack()"><span class="material-symbols-outlined"> arrow_back_ios_new </span></button>
     <script>
         function customBack() {
-            const currentPath = window.location.pathname;
-            const paths = {
-                '/app/aadm': '/app',
-                '/app/escuela': '/app',
-                '/app': '/',
-                '/': '/app'
-            };
-            
-            // Handle AADM individual pages
-            if (currentPath.startsWith('/app/aadm/')) {
-                window.location.href = '/app/aadm';
-                return;
-            }
-            
-            window.location.href = paths[currentPath] || '/app';
+            window.history.back();
         }
     </script>
     `
