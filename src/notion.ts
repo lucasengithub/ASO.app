@@ -204,7 +204,7 @@ export async function getNotionPage(pageId: string): Promise<string> {
 
             if ('child_page' in block) {
                 return `<a href="/app/i/${block.id}" class="aadm-item" style="text-decoration: none;">
-                    <p class="childpage">${block.child_page.title} <span class="material-symbols-outlined"> arrow_forward </span></p>
+                    <p class="childpage"  >${block.child_page.title} <span class="material-symbols-outlined"> arrow_forward </span></p>
                 </a>`;
             }
 

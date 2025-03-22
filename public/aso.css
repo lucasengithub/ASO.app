@@ -216,7 +216,7 @@ a {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #FDFDFD;
+    background-color: #ffffff;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -225,15 +225,26 @@ a {
     border-bottom: 1px solid #36e452;
     
     button{
-        background-color: #FDFDFD;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #head-bar;
+        background-color: #ffffff;
         text-align: center;
         color: #36e452;
         width: 48px;
         font-size: 1.5em;
-        text-transform: uppercase;
         transition: linear 0.1s;
         font-family: DMMono, monospace;
         z-index: 20;
+
+
+        *{
+            pointer-events: none;
+            margin: 0;
+            padding: 0;
+        };
+
 
         
     };
@@ -386,6 +397,7 @@ textarea{
     margin: 30 0px;
     padding: 0;
     background-color: #ffffff;
+    color: #040406;
     display: flex;
     justify-content: space-between;
     border-bottom: 2px solid #36e452;
@@ -454,7 +466,7 @@ textarea{
     width: 100%;
     text-align: left;
     margin: 0;
-    padding: 18px 10px;
+    padding: 18px;
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
@@ -646,6 +658,20 @@ textarea{
             text-decoration: none;
             color:#FDFDFD
     
+        }
+    }
+
+    #rss-feed{
+        display: flex;
+        flex-direction: row;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        width: 100%;
+        margin: 0 auto;
+        gap: 20px;
+
+        button{
+            width: calc(33.3333333vw - 40px);
         }
     }
 

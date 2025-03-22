@@ -45,7 +45,9 @@ export const routing = (app: any) => {
 
             const itemsHtml = items.map(item => {
                 if (item.destino) {
-                    return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
+                    const isInternal = item.destino.startsWith(process.env.SITE ?? '');
+                    const targetAttr = isInternal ? '' : ' target="_blank"';
+                    return `<a href="${item.destino}"${targetAttr} class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
                 } else if (item.pageId) {
                     return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso">${item.name}</button></a>`;
                 }
@@ -99,7 +101,9 @@ export const routing = (app: any) => {
 
             const itemsHtml = items.map(item => {
                 if (item.destino) {
-                    return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
+                    const isInternal = item.destino.startsWith(process.env.SITE ?? '');
+                    const targetAttr = isInternal ? '' : ' target="_blank"';
+                    return `<a href="${item.destino}"${targetAttr} class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 } else if (item.pageId) {
                     return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 }
@@ -130,7 +134,9 @@ export const routing = (app: any) => {
 
             const itemsHtml = items.map(item => {
                 if (item.destino) {
-                    return `<a href="${item.destino}" target="_blank" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
+                    const isInternal = item.destino.startsWith(process.env.SITE ?? '');
+                    const targetAttr = isInternal ? '' : ' target="_blank"';
+                    return `<a href="${item.destino}"${targetAttr} class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 } else if (item.pageId) {
                     return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 }
