@@ -24,7 +24,17 @@
             
             <div class="notion-content"></div>
 
-            <a onclick="alert('Versión 1 RC1')" id="aso-settings">Ajustes</a>
+            <a onclick="confirm('ASO.app\nVersión 1 RC1\n\n¿Borrar cache?')" id="aso-settings">Ajustes</a>
+
+            <script>
+                const confirm = (message) => {
+                    if (window.confirm(message)) {
+                        localStorage.clear();
+                        alert('Cache borrado');
+                        location.reload();
+                    }
+                }
+            </script>
         </main>
     </div>
 
