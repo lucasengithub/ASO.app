@@ -602,8 +602,10 @@ textarea{
         padding: 0;
         text-decoration: none;
         color:#FDFDFD;
-        font-family: P-Kiko, serif;
-
+        font-family: NeueMontreal, sans-serif;
+        font-size: 1.3em;
+        font-weight: 300;
+        width: calc(100% - 12px);
 
 
 
@@ -699,6 +701,7 @@ textarea{
         width: 100%;
         margin: 0 auto;
         gap: 20px;
+        min-height: auto;
 
         button{
             width: calc(33.3333333vw - 33px);
@@ -707,6 +710,12 @@ textarea{
 
         };
 
+    }
+
+    .esd-feed{
+        width: 100%;
+        min-height: auto;
+        font-size: 2em;
     }
 
 }
