@@ -5,6 +5,35 @@ export const barData = (
     <a id="n2" href="/app/escuela">Escuela</a>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Fade out justo antes de navegar
+            const navLinks = document.querySelectorAll('#aso-bar a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const mainEl = document.querySelector('main');
+                    if (mainEl) {
+                        mainEl.style.transition = 'opacity 0.3s';
+                        mainEl.style.opacity = '0';
+                    }
+                    setTimeout(() => {
+                        window.location.href = link.href;
+                    }, 100);
+                });
+            });
+
+            // Conserva tu lógica para headings
+            const headings = document.querySelectorAll('h1, h2, h3');
+            headings.forEach((heading) => {
+                heading.addEventListener('click', () => {
+                    const mainEl = document.querySelector('main');
+                    if (mainEl) {
+                        mainEl.style.transition = 'opacity 0.1s';
+                        mainEl.style.opacity = '0';
+                    }
+                });
+            });
+
+            // Mantén tu lógica para resaltar el link activo
             const currentPath = window.location.pathname;
             const anchors = document.querySelectorAll('#aso-bar a');
             anchors.forEach(anchor => {
@@ -97,3 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 `;
+
+export const helloC = `
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainEl = document.querySelector('main');
+            if (mainEl) {
+                mainEl.style.opacity = '0';
+                mainEl.style.transition = 'opacity 0.1s';
+                setTimeout(() => {
+                    mainEl.style.opacity = '1';
+                }, 100);
+            }
+
+        });
+    `

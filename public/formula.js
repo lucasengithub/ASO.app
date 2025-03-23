@@ -6,6 +6,7 @@ window.addEventListener('load', () => {
         const asoBar = document.getElementById('aso-bar');
         if (asoBar) {
             asoBar.style.paddingBottom = '20px';
+            asoBar.style.height = '60px';
         }
     }
 });

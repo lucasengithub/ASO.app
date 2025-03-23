@@ -29,10 +29,10 @@ app.get('/app/i/:pageId', async (req: Request, res: Response) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>aso.app</title>
 </head>
-<body>
+<body class="notion-app">
     <div id="head-bar"></div>
     <main>
-        <div id="notion-page">${pageContent}</div>
+        <div id="notion-page"><div id=border>${pageContent}</div></div>
     </main>
 </body>
 </html>`;

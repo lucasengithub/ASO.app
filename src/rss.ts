@@ -13,7 +13,7 @@ export async function getRSSFeedHTML(): Promise<string> {
             const title = item.title[0];
             const link = item.link[0];
             const description = item.description[0];
-            html += `<div><a href="${link}" target="_blank" style="text-decoration: none;"><button class="bigPost"><h4>${title}</h4>\n<p>${description}<p></button></a></div>`;
+            html += `<div><a href="${link}" target="_blank" style="text-decoration: none;"><button class="bigPost"><h4>${title}</h4>\n<p>${description}</p></button></a></div>`;
         });
         return html;
     } catch (err) {
