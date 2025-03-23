@@ -103,9 +103,9 @@ export const routing = (app: any) => {
                 if (item.destino) {
                     const isInternal = item.destino.startsWith(process.env.SITE ?? '');
                     const targetAttr = isInternal ? '' : ' target="_blank"';
-                    return `<a href="${item.destino}"${targetAttr} class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
+                    return `<a href="${item.destino}" ${targetAttr} style="text-decoration: none;"  class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 } else if (item.pageId) {
-                    return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
+                    return `<a href="/app/i/${item.pageId}" style="text-decoration: none;" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 }
                 return '';
             }).join('\n');
@@ -136,9 +136,9 @@ export const routing = (app: any) => {
                 if (item.destino) {
                     const isInternal = item.destino.startsWith(process.env.SITE ?? '');
                     const targetAttr = isInternal ? '' : ' target="_blank"';
-                    return `<a href="${item.destino}"${targetAttr} class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
+                    return `<a href="${item.destino}" ${targetAttr} style="text-decoration: none;"  class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 } else if (item.pageId) {
-                    return `<a href="/app/i/${item.pageId}" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
+                    return `<a href="/app/i/${item.pageId}" style="text-decoration: none;" class="aadm-item"><button class="bigaso"><span class="material-symbols-outlined"> ${item.icono} </span> ${item.name}</button></a>`;
                 }
                 return '';
             }).join('\n');
