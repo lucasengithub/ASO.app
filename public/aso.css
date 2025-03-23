@@ -127,7 +127,6 @@ body {
     pointer-events: all;
     font-family: NeueMontreal, sans-serif;
     margin: 0;
-    overflow: hidden;
 }
 
 main{
@@ -450,11 +449,12 @@ textarea{
 .esd-feed{
     display: flex;
     flex-direction: row;
+    overflow-y: visible;
     overflow-x: scroll;
-    overflow-y: hidden;
     width: 100%;
     margin: 0 auto;
     gap: 20px;
+    min-height: calc(50vw - 40px)
 }
 
 
@@ -627,6 +627,7 @@ textarea{
     box-sizing: border-box;
     overflow: hidden;
 
+
     p{
         margin: 0;
         text-decoration: none;
@@ -680,6 +681,7 @@ textarea{
         text-align: left;
         box-sizing: border-box;
         overflow: hidden;
+        
     
         p{
             margin: 0;
