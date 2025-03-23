@@ -493,8 +493,7 @@ textarea{
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;
-    user-select: none;
-    text-decoration: none;
+    text-decoration: none !important;
     
     *{
         white-space: nowrap; 
