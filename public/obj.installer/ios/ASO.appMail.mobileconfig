@@ -872,26 +872,6 @@ Si vas al extranjero o te conectas desde el extranjero (iCloud Relay), tu cuenta
 			<key>SSID_STR</key>
 			<string>ESDMADRID_WIFI</string>
 		</dict>
-		<dict>
-			<key>PayloadDescription</key>
-			<string>Configura los ajustes para suscribirse al calendario</string>
-			<key>PayloadDisplayName</key>
-			<string>Calendarios de suscripción</string>
-			<key>PayloadIdentifier</key>
-			<string>com.apple.subscribedcalendar.account.3FD4A172-34CC-431D-92AD-A17E9ACDAF8C</string>
-			<key>PayloadType</key>
-			<string>com.apple.subscribedcalendar.account</string>
-			<key>PayloadUUID</key>
-			<string>3FD4A172-34CC-431D-92AD-A17E9ACDAF8C</string>
-			<key>PayloadVersion</key>
-			<integer>1</integer>
-			<key>SubCalAccountDescription</key>
-			<string>Eventos</string>
-			<key>SubCalAccountHostName</key>
-			<string>https://testground.lucaspeinado.es/ESDConf/assets/myevents.ics</string>
-			<key>SubCalAccountUseSSL</key>
-			<true/>
-		</dict>
 	</array>
 	<key>PayloadDescription</key>
 	<string>ASO.app es la App de la AADM para no perderte nada.
@@ -901,7 +881,7 @@ Si vas al extranjero o te conectas desde el extranjero (iCloud Relay), tu cuenta
 	<key>PayloadDisplayName</key>
 	<string>ASO.app + Mail</string>
 	<key>PayloadIdentifier</key>
-	<string>MacBook-Pro-de-Lucas.479CD0A1-F2F8-4D2E-A3F4-65E3BE6C6078</string>
+	<string>space.aadm.app.062f9601-987d-45da-8055-10a586b1d768</string>
 	<key>PayloadOrganization</key>
 	<string>AADM</string>
 	<key>PayloadRemovalDisallowed</key>
@@ -909,7 +889,7 @@ Si vas al extranjero o te conectas desde el extranjero (iCloud Relay), tu cuenta
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
-	<string>43BEF375-12EE-41D3-A42E-5E3A9234B61E</string>
+	<string>F5C16247-14F1-465A-9807-E0E728A50346</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
 </dict>

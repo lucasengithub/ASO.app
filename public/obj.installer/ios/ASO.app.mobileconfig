@@ -808,7 +808,7 @@ Para eliminar, desinstala el perfil en Ajustes.</string>
 	<key>PayloadDisplayName</key>
 	<string>ASO.app</string>
 	<key>PayloadIdentifier</key>
-	<string>MacBook-Pro-de-Lucas.479CD0A1-F2F8-4D2E-A3F4-65E3BE6C6078</string>
+	<string>space.aadm.app.c3f65a1e-2a5b-4ac1-a146-9184946ade17</string>
 	<key>PayloadOrganization</key>
 	<string>AADM</string>
 	<key>PayloadRemovalDisallowed</key>
@@ -816,7 +816,7 @@ Para eliminar, desinstala el perfil en Ajustes.</string>
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
-	<string>0A2A9BEC-337F-404D-8670-3F70CB909D20</string>
+	<string>2EC04F19-5140-42C4-AC31-30A829CAC611</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
 </dict>
