@@ -3,6 +3,7 @@ import { PDFDocument, PDFPage, RGB, rgb } from 'pdf-lib';
 
 const fs = require('fs').promises;
 const path = require('path');
+const aadmWatermark = "Hecho con aso.APP";
 
 /**
  * Interfaz para las posiciones de los elementos en el PDF

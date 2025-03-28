@@ -7,7 +7,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log("Inicializando formulario de reclamaciones...");
     
     // Configuración inicial
-    initializeSignaturePad();
+    const canvas = document.getElementById('firmaPad');
+    if (canvas) {
+        initializeSignaturePad();
+    } else {
+        console.warn("No se encontró el canvas para la firma. La funcionalidad de firma no estará disponible.");
+    }
+    
     setupEventListeners();
     setupDateField();
     
@@ -21,8 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 /**
  * Elimina la alerta de prueba cuando la página esté funcional
  */
-
-
 function removeTestAlert() {
     const alertScript = document.querySelector('script:not([src])');
     if (alertScript && alertScript.textContent.includes('Página en pruebas')) {
@@ -35,6 +39,10 @@ function removeTestAlert() {
  */
 function initializeSignaturePad() {
     const canvas = document.getElementById('firmaPad');
+    if (!canvas) {
+        console.error('No se encontró el elemento canvas para el pad de firma');
+        return;
+    }
     
     // Ajustar el tamaño del canvas para que sea responsive
     resizeCanvas(canvas);
@@ -51,14 +59,21 @@ function initializeSignaturePad() {
     
     // Configurar botón para limpiar firma
     const clearButton = document.getElementById('clearSignature');
-    clearButton.addEventListener('click', () => {
-        signaturePad.clear();
-        console.log("Firma borrada");
-    });
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            signaturePad.clear();
+            console.log("Firma borrada");
+        });
+    }
     
     // Hacer responsive el canvas cuando cambia el tamaño de la ventana
     window.addEventListener('resize', () => {
-        resizeCanvas(canvas);
+        // Debounce para evitar muchas llamadas durante el redimensionamiento
+        clearTimeout(window.resizeTimeout);
+        window.resizeTimeout = setTimeout(() => {
+            console.log("Redimensionando canvas de firma...");
+            resizeCanvas(canvas);
+        }, 200);
     });
     
     console.log("Pad de firma inicializado correctamente");
@@ -69,19 +84,39 @@ function initializeSignaturePad() {
  * @param {HTMLCanvasElement} canvas - El canvas a redimensionar
  */
 function resizeCanvas(canvas) {
-    // Calcular el ancho óptimo (ancho del contenedor o máximo 500px)
-    const parentWidth = canvas.parentElement.clientWidth;
-    const canvasWidth = Math.min(parentWidth, 500);
-    const aspectRatio = 4; // Relación ancho/alto (4:1)
+    if (!canvas) return;
     
-    // Aplicar las dimensiones
-    canvas.width = canvasWidth;
-    canvas.height = canvasWidth / aspectRatio;
+    // Obtener el contenedor padre
+    const parentDiv = canvas.parentElement;
+    const displayWidth = parentDiv.clientWidth;
+    const displayHeight = Math.min(200, displayWidth / 2); // Altura máxima de 200px o proporción 2:1
     
-    // Si ya existía una firma, restaurarla después de redimensionar
+    // Obtener el factor de escalado de la pantalla para dispositivos de alta resolución
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    
+    // Establecer las dimensiones del canvas teniendo en cuenta el pixel ratio
+    canvas.width = displayWidth * devicePixelRatio;
+    canvas.height = displayHeight * devicePixelRatio;
+    
+    // Establecer las dimensiones de visualización del canvas
+    canvas.style.width = `${displayWidth}px`;
+    canvas.style.height = `${displayHeight}px`;
+    
+    // Escalar el contexto para mantener la relación de aspecto
+    const ctx = canvas.getContext('2d');
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    
+    // Restaurar la firma si existía
     if (signaturePad && !signaturePad.isEmpty()) {
         const signatureData = signaturePad.toData();
-        signaturePad.clear();
+        signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)',
+            penColor: 'rgb(0, 0, 0)',
+            minWidth: 0.5,
+            maxWidth: 2.5,
+            velocityFilterWeight: 0.7,
+            throttle: 16
+        });
         signaturePad.fromData(signatureData);
     }
 }
@@ -120,28 +155,54 @@ function setupDateField() {
  * @returns {boolean} - true si el formulario es válido
  */
 function validateForm() {
-    // Lista de campos obligatorios
-    const camposObligatorios = [
-        'Nombre', 'Apellidos', 'NIF', 'expone', 'solicita', 'lugar', 'fecha', 'firma', 'mail', 'tel'
-    ];
+    // Primero, veamos qué campos realmente existen en el formulario
+    const form = document.getElementById('reclamacionesForm');
+    console.log("Campos existentes en el formulario:");
+    const formElements = form.elements;
+    const existingFields = [];
+    
+    for (let i = 0; i < formElements.length; i++) {
+        if (formElements[i].id) {
+            console.log(`- Campo encontrado: ${formElements[i].id} (tipo: ${formElements[i].type})`);
+            existingFields.push(formElements[i].id);
+        }
+    }
+    
+    // Usando solo los campos que realmente existen
+    const camposObligatorios = existingFields.filter(id => 
+        id !== 'clearSignature' && 
+        id !== 'submitBtn' && 
+        !id.includes('firmaPad')
+    );
+    
+    console.log("Campos a validar:", camposObligatorios);
     
     let formValido = true;
     
     // Validar campos de texto
     for (const id of camposObligatorios) {
         const campo = document.getElementById(id);
-        if (!campo.value.trim()) {
-            mostrarMensaje('Validación', `El campo ${campo.previousElementSibling.textContent} es obligatorio`);
+        // Ya sabemos que el campo existe, pero verificamos por seguridad
+        if (!campo) {
+            continue;
+        }
+        
+        // Solo validar campos con valor (inputs, textareas, selects)
+        if (campo.value !== undefined && !campo.value.trim()) {
+            mostrarMensaje('Validación', `El campo ${campo.previousElementSibling?.textContent || id} es obligatorio`);
             campo.focus();
             formValido = false;
             break;
         }
     }
     
-    // Validar que haya una firma
-    if (formValido && signaturePad.isEmpty()) {
+    // Validar que haya una firma si existe el pad de firma
+    if (formValido && typeof signaturePad !== 'undefined' && signaturePad && signaturePad.isEmpty()) {
         mostrarMensaje('Validación', 'Es necesario firmar el documento');
-        document.getElementById('firmaPad').scrollIntoView({ behavior: 'smooth' });
+        const firmaPad = document.getElementById('firmaPad');
+        if (firmaPad) {
+            firmaPad.scrollIntoView({ behavior: 'smooth' });
+        }
         formValido = false;
     }
     
@@ -162,9 +223,6 @@ function mostrarMensaje(titulo, mensaje) {
  * Procesa el formulario y genera el PDF con los datos
  */
 async function procesarFormulario() {
-    // Mostrar indicador de carga
-    const loadingIndicator = mostrarCargando();
-    
     try {
         // 1. Recopilar los datos del formulario
         const formData = new FormData(document.getElementById('reclamacionesForm'));
@@ -215,27 +273,8 @@ async function procesarFormulario() {
         
         // 6. Opcional: Limpiar el formulario si se desea
         // document.getElementById('reclamacionesForm').reset();
-        
     } catch (error) {
         console.error("Error al procesar el formulario:", error);
         throw error;
-    } finally {
-        // Ocultar indicador de carga
-        ocultarCargando(loadingIndicator);
-    }
-}
-
-/**
- * Muestra un indicador de carga mientras se procesa la solicitud
- * @returns {HTMLElement} - El elemento creado para el indicador
- */
-
-/**
- * Oculta el indicador de carga
- * @param {HTMLElement} loader - El elemento del indicador de carga
- */
-function ocultarCargando(loader) {
-    if (loader && loader.parentNode) {
-        loader.parentNode.removeChild(loader);
     }
 }
