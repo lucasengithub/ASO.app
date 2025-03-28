@@ -299,6 +299,14 @@ hr{
     margin: 20px 0;
 }
 
+
+#firmaPad{
+    cursor: crosshair;
+    width: 100%;
+    height: 200px;
+    
+}
+
 h4{
     font-family: DMMono, monospace;
     font-size: 1.1em;
@@ -314,7 +322,7 @@ button{
     color: #040406;
     border: 0;
     width: 200px;
-    cursor: none;
+    cursor: pointer;
 
 }
 
@@ -335,8 +343,8 @@ input{
     background-color: #ffffff;
     color: #040406;
     font-family: DMMono, monospace;
-    cursor: none;
-    font-size: 16px
+    font-size: 16px;
+    cursor: text;
 
 }
 
@@ -349,12 +357,13 @@ label{
     overflow: visible;
     width: 100%;
     text-overflow: clip;
+    cursor: default;
 }
 
 
 form{
     width: 100%;
-    cursor: none;
+    cursor: default;
     gap: 10px;
     display: flex;
     flex-direction: column;
@@ -366,7 +375,6 @@ textarea{
     background-color: #ffffff;
     color: #040406;
     font-family: DMMono, monospace;
-    cursor: none;
     font-size: 16px;
     resize: none;
 }
@@ -653,6 +661,29 @@ textarea{
     #bCursor{
         display: block;
     }
+
+    textarea{
+        cursor: none;
+
+    }
+    
+    input{
+        cursor: none;
+    }
+
+    button{
+        cursor: none;
+    }
+
+    label{
+        cursor: none;
+    }
+
+    form{
+        cursor: none;
+    }
+
+
 
     .popup{
         width: 60%;

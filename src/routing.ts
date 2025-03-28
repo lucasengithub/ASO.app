@@ -4,8 +4,17 @@ import path from 'path';
 import { navGen } from './inyeccion';
 import { getHomeItems, getAADMItems, getEscuelaItems } from './notion';
 import { getRSSFeedHTML, getESDRSSFeedHTML } from './rss';
-export const routing = (app: any) => {
+import express from 'express';
+import bodyParser from 'body-parser';
+import { generatePDF } from './ext/genPDF';
 
+const app = express();
+const PORT = 3000;
+
+export const routing = (app: any) => {
+    // Configurar middleware para parsear JSON
+    app.use(bodyParser.json({ limit: '10mb' })); // Aumentar el límite para manejar imágenes grandes
+    app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
     app.get('/', (req: Request, res: Response) => {
         fs.readFile(path.join(__dirname, '../public/apphello.html'), 'utf8', (err, data) => {
@@ -88,8 +97,7 @@ export const routing = (app: any) => {
                 return;
             }
             navGen(data, res);
-        }
-    );
+        });
     });
 
     app.get('/app/escuela', async (req: Request, res: Response) => {
@@ -116,13 +124,21 @@ export const routing = (app: any) => {
                 `<div class="notion-content">${itemsHtml}</div>`
             );
 
-
-
             navGen(modData, res);
         } catch (error) {
             console.error('Error en la ruta /escuela:', error);
             res.status(500).send('Internal Server Error');
         }
+    });
+
+    app.get('/o/reclamaciones', (req: Request, res: Response) => {
+        fs.readFile(path.join(__dirname, '../public/o/reclamaciones/index.html'), 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Error reading file');
+                return;
+            }
+            navGen(data, res);
+        });
     });
 
     app.get('/app/aadm', async (req: Request, res: Response) => {
@@ -154,8 +170,7 @@ export const routing = (app: any) => {
             console.error('Error en la ruta /aadm:', error);
             res.status(500).send('Internal Server Error');
         }
-    }
-    );
-    
+    });
 
+    app.post('/api/generate-pdf', generatePDF);
 }

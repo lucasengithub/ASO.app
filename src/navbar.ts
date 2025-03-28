@@ -124,6 +124,69 @@ document.addEventListener('DOMContentLoaded', () => {
             scale = 1; // Vuelve a la escala normal
         });
     });
+
+    const fechaElements = document.querySelectorAll('input[type="date"]');
+    fechaElements.forEach((fecha) => {
+        fecha.addEventListener('mouseenter', () => {
+            scale = 0.6;
+        });
+
+        fecha.addEventListener('mouseleave', () => {
+            scale = 1;
+        });
+    });
+
+    const mailElements = document.querySelectorAll('input[type="email"]');
+    mailElements.forEach((mail) => {
+        mail.addEventListener('mouseenter', () => {
+            scale = 0.6;
+        });
+
+        mail.addEventListener('mouseleave', () => {
+            scale = 1;
+        });
+    });
+
+    const phoneElements = document.querySelectorAll('input[type="tel"]');
+    phoneElements.forEach((phone) => {
+        phone.addEventListener('mouseenter', () => {
+            scale = 0.6;
+        });
+
+        phone.addEventListener('mouseleave', () => {
+            scale = 1;
+        });
+    });
+    
+    
+
+
+    // Lógica canvas
+    const canvasElements = document.querySelectorAll('#firmaPad');
+    canvasElements.forEach((canvas) => {
+        canvas.addEventListener('mouseenter', () => {
+            scale = 0;
+        }); 
+
+        canvas.addEventListener('mouseleave', () => {
+            scale = 1;
+        }); 
+    });
+
+
+    // logica textarea
+    const textAreaElements = document.querySelectorAll('textarea');
+    textAreaElements.forEach((textArea) => {
+        textArea.addEventListener('mouseenter', () => {
+            scale = 0.6;
+        });
+
+        textArea.addEventListener('mouseleave', () => {
+            scale = 1;
+        });
+    });
+
+
 });
 `;
 

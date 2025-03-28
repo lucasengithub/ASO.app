@@ -22,11 +22,13 @@ self.addEventListener("fetch", function (e) {
     e.respondWith(
         fetch(e.request)
             .then(function (response) {
-                // En línea: se utiliza la versión online y se actualiza la caché
-                var responseClone = response.clone();
-                caches.open(staticCacheName).then(function (cache) {
-                    cache.put(e.request, responseClone);
-                });
+                // Solo almacenar en caché solicitudes GET
+                if (e.request.method === "GET") {
+                    var responseClone = response.clone();
+                    caches.open(staticCacheName).then(function (cache) {
+                        cache.put(e.request, responseClone);
+                    });
+                }
                 return response;
             })
             .catch(function () {

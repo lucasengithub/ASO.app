@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aso.app</title>
+    <!-- Importar Signature Pad y jsPDF -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        #firmaPad {
+            border: 1px solid #36e452;
+        }
+    </style>
+</head>
+<body>
+    <div id="head-bar"></div>
+    <script>alert('Página en pruebas, no funciona');</script>
+    <main style="padding-top: 100px;">
+        <h1>Reclamaciones</h1>
+        <form class="reclamaciones" id="reclamacionesForm">
+            <label for="Nombre">Nombre</label>
+            <input type="text" name="Nombre" id="Nombre">
+            <label for="Apellidos">Apellidos</label>
+            <input type="text" name="Apellidos" id="Apellidos">
+            <label for="NIF">NIF</label>
+            <input type="text" name="NIF" id="NIF">
+            <label for="ESP">Especialidad/curso/grupo</label>
+            <input type="text" name="ESP" id="ESP">
+            <label for="mail">Correo electrónico</label>
+            <input type="email" name="mail" id="mail">
+            <label for="tel">Teléfono</label>
+            <input type="tel" name="tel" id="tel">
+            <label for="expone">Expone</label>
+            <textarea name="expone" id="expone" rows="10"></textarea>
+            <label for="solicita">Solicita</label>
+            <textarea name="solicita" id="solicita" rows="10"></textarea>
+            <label for="documentos">Documentación Adjunta</label>
+            <textarea name="documentos" id="documentos" rows="5"></textarea>
+            <label for="lugar">Lugar</label>
+            <input type="text" name="lugar" id="lugar">
+            <label for="fecha">Fecha</label>
+            <input type="date" name="fecha" id="fecha">
+
+            <label for="firmaPad">Firma (dibujar abajo)</label>
+            <canvas id="firmaPad"></canvas>
+            <button type="button" class="outlined" id="clearSignature"  style="align-self: center;">Limpiar firma</button>
+            <br>
+            <button type="submit">Enviar</button>
+        </form>
+    </main>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="reclamaciones/act.js"></script>
+</html>
