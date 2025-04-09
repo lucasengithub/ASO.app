@@ -1,9 +1,11 @@
+// Advertencia: Script hecho a medias con IA, hay que revisarlo para ver que no haya errores
+
+
 import { Request, Response } from 'express';
-import { PDFDocument, PDFPage, RGB, rgb } from 'pdf-lib';
+import { drawText, PDFDocument, PDFPage, RGB, rgb } from 'pdf-lib';
 
 const fs = require('fs').promises;
 const path = require('path');
-const aadmWatermark = "Hecho con aso.APP";
 
 /**
  * Interfaz para las posiciones de los elementos en el PDF
@@ -29,7 +31,6 @@ interface FormData {
     expone?: string;
     solicita?: string;
     documentos?: string;
-    lugar?: string;
     fecha?: string;
     firmaImg?: string;
 }
@@ -79,29 +80,29 @@ export const generatePDF = async (req: Request, res: Response): Promise<void> =>
         const pages = pdfDoc.getPages();
         const firstPage: PDFPage = pages[0];
         
-        // 5. Definir estilos para el texto en el PDF
         const fontSize: number = 11;
-        const fontColor: RGB = rgb(0, 0, 0); // Negro
+        const fontColor: RGB = rgb(0, 0, 0); 
+
+        // Posiciones
         
-        // 6. Calcular posiciones para los datos en el PDF
-        // Nota: Las posiciones exactas dependen de la estructura del PDF plantilla
         const positions: Record<string, PositionConfig> = {
-            nombre: { x: 150, y: 700 },
-            apellidos: { x: 350, y: 700 },
-            nif: { x: 150, y: 680 },
-            especialidad: { x: 350, y: 680 },
-            email: { x: 150, y: 660 },
-            telefono: { x: 350, y: 660 },
-            expone: { x: 100, y: 600, maxWidth: 400 },
-            solicita: { x: 100, y: 450, maxWidth: 400 },
-            documentos: { x: 100, y: 300, maxWidth: 400 },
-            lugar: { x: 150, y: 200 },
-            fecha: { x: 350, y: 200 },
-            firma: { x: 100, y: 150, width: 150, height: 50 }
+            apellidos: { x: 105, y: 685 },
+            nombre: { x: 100, y: 667 },
+            nif: { x: 85, y: 649 },
+            especialidad: { x: 165, y: 631  },
+            email: { x: 140, y: 614 },
+            telefono: { x: 430 , y: 614 },
+            expone: { x: 70, y: 584, maxWidth: 508 },
+            solicita: { x: 70, y: 410, maxWidth: 508 },
+            documentos: { x: 70, y: 243, maxWidth: 508 },
+            firma: { x: 230, y: 112, height: 45  },
+            dia: { x: 239, y: 177 },
+            mes: { x: 288, y:  177},
+            ano: { x: 420, y: 177 }
         };
         
-        // 7. Insertar los datos en el PDF
-        // Datos personales
+        // Dibujar
+
         firstPage.drawText(formData.Nombre || "", {
             x: positions.nombre.x,
             y: positions.nombre.y,
@@ -144,29 +145,37 @@ export const generatePDF = async (req: Request, res: Response): Promise<void> =>
             color: fontColor
         });
         
-        // Textos largos - añadimos multi-línea para expone y solicita
         drawMultilineText(firstPage, formData.expone || "", positions.expone, fontSize, fontColor);
         drawMultilineText(firstPage, formData.solicita || "", positions.solicita, fontSize, fontColor);
         drawMultilineText(firstPage, formData.documentos || "", positions.documentos, fontSize, fontColor);
         
-        // Lugar y fecha
-        firstPage.drawText(formData.lugar || "", {
-            x: positions.lugar.x,
-            y: positions.lugar.y,
+        
+        let dia = "", mes = "", ano = "";
+        if (formData.fecha) {
+            const fechaObj = new Date(formData.fecha);
+            dia = fechaObj.getDate().toString().padStart(2, '0');
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            mes = meses[fechaObj.getMonth()];
+            ano = fechaObj.getFullYear().toString().slice(-2); // Solo los últimos dos dígitos del año
+        }
+        
+        firstPage.drawText(dia, {
+            x: positions.dia.x,
+            y: positions.dia.y,
             size: fontSize,
             color: fontColor
         });
         
-        // Formatear fecha para mostrar en el PDF (de YYYY-MM-DD a DD/MM/YYYY)
-        let fechaFormateada = "";
-        if (formData.fecha) {
-            const fechaObj = new Date(formData.fecha);
-            fechaFormateada = `${fechaObj.getDate().toString().padStart(2, '0')}/${(fechaObj.getMonth()+1).toString().padStart(2, '0')}/${fechaObj.getFullYear()}`;
-        }
+        firstPage.drawText(mes, {
+            x: positions.mes.x,
+            y: positions.mes.y,
+            size: fontSize,
+            color: fontColor
+        });
         
-        firstPage.drawText(fechaFormateada, {
-            x: positions.fecha.x,
-            y: positions.fecha.y,
+        firstPage.drawText(ano, {
+            x: positions.ano.x,
+            y: positions.ano.y,
             size: fontSize,
             color: fontColor
         });
@@ -179,14 +188,20 @@ export const generatePDF = async (req: Request, res: Response): Promise<void> =>
                 const firmaBase64 = firmaImg.split(',')[1];
                 const firmaBytes = Buffer.from(firmaBase64, 'base64');
                 
-                // Insertar la imagen en el PDF
+                // Insertar la imagen en el PDF respetando la proporción
                 const firmaImagePdf = await pdfDoc.embedPng(firmaBytes);
-                
+                const firmaDims = firmaImagePdf.scale(1); // Obtener dimensiones originales de la imagen
+
+                // Calcular escala para respetar proporción
+                const firmaWidth = positions.firma.width || 150;
+                const firmaHeight = positions.firma.height || 45;
+                const scale = Math.min(firmaWidth / firmaDims.width, firmaHeight / firmaDims.height);
+
                 firstPage.drawImage(firmaImagePdf, {
                     x: positions.firma.x,
                     y: positions.firma.y,
-                    width: positions.firma.width || 150,
-                    height: positions.firma.height || 50
+                    width: firmaDims.width * scale,
+                    height: firmaDims.height * scale
                 });
                 
                 console.log("Firma insertada correctamente");
@@ -230,36 +245,44 @@ function drawMultilineText(
     fontSize: number, 
     color: RGB
 ): void {
-    const palabras = text.split(' ');
-    let lineaActual = '';
-    let y = position.y;
+    const lineSpacing = fontSize + 2; // Espaciado entre líneas
     const maxWidth = position.maxWidth || 400;
     const caracteresMaxPorLinea = Math.floor(maxWidth / (fontSize * 0.5));
-    
-    for (const palabra of palabras) {
-        if ((lineaActual.length + palabra.length + 1) > caracteresMaxPorLinea) {
-            // Dibujar línea actual y comenzar nueva línea
+    let y = position.y;
+
+    // Dividir el texto en párrafos por saltos de línea
+    const parrafos = text.split('\n');
+
+    for (const parrafo of parrafos) {
+        const palabras = parrafo.split(' ');
+        let lineaActual = '';
+
+        for (const palabra of palabras) {
+            if ((lineaActual.length + palabra.length + 1) > caracteresMaxPorLinea) {
+                // Dibujar línea actual y comenzar nueva línea
+                page.drawText(lineaActual, {
+                    x: position.x,
+                    y,
+                    size: fontSize,
+                    color
+                });
+                y -= lineSpacing; // Mover hacia abajo para la siguiente línea
+                lineaActual = palabra;
+            } else {
+                // Añadir palabra a la línea actual
+                lineaActual = lineaActual ? `${lineaActual} ${palabra}` : palabra;
+            }
+        }
+
+        // Dibujar la última línea del párrafo
+        if (lineaActual) {
             page.drawText(lineaActual, {
                 x: position.x,
                 y,
                 size: fontSize,
                 color
             });
-            y -= fontSize + 2; // Espacio entre líneas
-            lineaActual = palabra;
-        } else {
-            // Añadir palabra a la línea actual
-            lineaActual = lineaActual ? `${lineaActual} ${palabra}` : palabra;
+            y -= lineSpacing; // Mover hacia abajo para el siguiente párrafo
         }
-    }
-    
-    // Dibujar la última línea
-    if (lineaActual) {
-        page.drawText(lineaActual, {
-            x: position.x,
-            y,
-            size: fontSize,
-            color
-        });
     }
 }

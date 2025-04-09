@@ -1,3 +1,4 @@
+// Advertencia: Este archivo está hecho con IA y puede contener errores.
 // Variables globales
 let signaturePad;
 let formLoaded = false;
@@ -17,22 +18,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     setupDateField();
     
-    // Eliminar la alerta de prueba
-    removeTestAlert();
-    
+
     formLoaded = true;
     console.log("Formulario listo para su uso");
 });
-
-/**
- * Elimina la alerta de prueba cuando la página esté funcional
- */
-function removeTestAlert() {
-    const alertScript = document.querySelector('script:not([src])');
-    if (alertScript && alertScript.textContent.includes('Página en pruebas')) {
-        alertScript.remove();
-    }
-}
 
 /**
  * Inicializa el pad de firma con configuraciones optimizadas
@@ -181,6 +170,11 @@ function validateForm() {
     
     // Validar campos de texto
     for (const id of camposObligatorios) {
+        // Excepción: el campo "documentos" no es obligatorio
+        if (id === 'documentos') {
+            continue;
+        }
+
         const campo = document.getElementById(id);
         // Ya sabemos que el campo existe, pero verificamos por seguridad
         if (!campo) {
@@ -264,12 +258,21 @@ async function procesarFormulario() {
         // 5. Obtener y mostrar el PDF generado
         const pdfBlob = await response.blob();
         const pdfUrl = URL.createObjectURL(pdfBlob);
+        const dwl = document.querySelector('#dwl');
+
+        dwl.style.display = 'flex';
         
-        // Abrir el PDF en una nueva pestaña
-        window.open(pdfUrl, '_blank');
-        
-        // Mostrar mensaje de éxito
-        mostrarMensaje('Éxito', 'El PDF se ha generado correctamente');
+        const dwlPdf = document.querySelector('#dwlPDF');
+
+        dwlPdf.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = 'reclamacion-esd.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
         
         // 6. Opcional: Limpiar el formulario si se desea
         // document.getElementById('reclamacionesForm').reset();

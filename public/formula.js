@@ -13,6 +13,12 @@ window.addEventListener('load', () => {
     }
 });
 
+// backstage-salida
+const backstage = document.querySelector('.backstage');
+backstage.addEventListener('click', () => {
+    backstage.style.display = 'none';
+});
+
 // Register the Service Worker
 async function registerSW() {
     if ('serviceWorker' in navigator) {
