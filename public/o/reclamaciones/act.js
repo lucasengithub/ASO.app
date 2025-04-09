@@ -260,18 +260,21 @@ async function procesarFormulario() {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         const dwl = document.querySelector('#dwl');
 
-        dwl.style.display = 'flex';
-        
-        const dwlPdf = document.querySelector('#dwlPDF');
-
-        dwlPdf.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.href = pdfUrl;
-            link.download = 'reclamacion-esd.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
+        if (dwl) {
+            dwl.style.display = 'flex';
+            
+            const dwlPdf = document.querySelector('#dwlPDF');
+            if (dwlPdf) {
+                dwlPdf.addEventListener('click', () => {
+                    // Abrir el PDF en una nueva pestaña
+                    window.open(pdfUrl, '_blank');
+                });
+            } else {
+                console.error("No se encontró el botón con ID 'dwlPDF'.");
+            }
+        } else {
+            console.error("No se encontró el contenedor con ID 'dwl'.");
+        }
 
         
         // 6. Opcional: Limpiar el formulario si se desea
