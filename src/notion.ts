@@ -101,7 +101,131 @@ export async function getHomeItems(): Promise<AADMItem[]> {
     }
 }
 
+function renderRichText(richText: any[]): string {
+    return richText.map(textItem => {
+        let content = textItem.plain_text;
+        const annotations = textItem.annotations;
 
+        // Aplicar formato básico
+        if (annotations.bold) content = `<b>${content}</b>`;
+        if (annotations.italic) content = `<i>${content}</i>`;
+        if (annotations.underline) content = `<u>${content}</u>`;
+        if (annotations.strikethrough) content = `<s>${content}</s>`;
+
+        // Enlace
+        if (textItem.href) {
+            let href = textItem.href;
+
+            // Verificar si el enlace comienza con "/"
+            if (href.startsWith('/')) {
+                // Ajustar el enlace
+                href = `/app/i${href}`;
+                // Retornar el enlace sin target="_blank"
+                content = `<a href="${href}">${content}</a>`;
+            } else {
+                // Enlace normal con target="_blank"
+                content = `<a href="${href}" target="_blank">${content}</a>`;
+            }
+        }
+
+        // Manejar colores
+        const hasColor = annotations.color !== 'default';
+        const hasBackground = annotations.color.endsWith('_background');
+
+        if (hasColor || hasBackground) {
+            let style = '';
+            if (hasColor && !hasBackground) {
+                style = `color: ${annotations.color};`;
+            }
+            if (hasBackground) {
+                const bgColor = annotations.color.replace('_background', '');
+                style += `background-color: ${bgColor};`;
+            }
+            return `<span style="${style}">${content}</span>`;
+        }
+
+        return content;
+    }).join('');
+}
+
+async function processBlock(block: any): Promise<string> {
+    if ('paragraph' in block) {
+        return `<p>${renderRichText(block.paragraph.rich_text)}</p>`;
+    }
+    
+    if ('heading_1' in block) {
+        return `<h1>${renderRichText(block.heading_1.rich_text)}</h1>`;
+    }
+    if ('heading_2' in block) {
+        return `<h2>${renderRichText(block.heading_2.rich_text)}</h2>`;
+    }
+    if ('heading_3' in block) {
+        return `<h3>${renderRichText(block.heading_3.rich_text)}</h3>`;
+    }
+    
+    if ('bulleted_list_item' in block) {
+        return `<ul><li>${renderRichText(block.bulleted_list_item.rich_text)}</li></ul>`;
+    }
+
+    if ('to_do' in block) {
+        return `<input type="checkbox" ${block.to_do.checked ? 'checked' : ''} disabled>
+                ${renderRichText(block.to_do.rich_text)}`;
+    }
+    
+    if ('quote' in block) {
+        return `<blockquote>${renderRichText(block.quote.rich_text)}</blockquote>`;
+    }
+
+    if ('bookmark' in block) {
+        const url = block.bookmark.url;
+        return `<div><a href="${url}" target="_blank" style="text-decoration: none;">
+            <button class="bigPost"><h4>Abrir.</h4>\n<p>${url}<p></button></a></div>`;
+    }
+
+    if ('code' in block) {
+        return `<pre><code>${renderRichText(block.code.rich_text)}</code></pre>`;
+    }
+
+    if ('divider' in block) {
+        return '<hr>';
+    }
+
+    if ('embed' in block) {
+        const url = block.embed.url;
+        return `<iframe src="${url}" frameborder="0"></iframe>`;
+    }
+
+    if ('child_page' in block) {
+        return `<a href="/app/i/${block.id}" class="aadm-item" style="text-decoration: none;">
+            <p class="childpage"  >${block.child_page.title} <span class="material-symbols-outlined"> arrow_forward </span></p>
+        </a>`;
+    }
+
+    if ('toggle' in block) {
+        // Verificar si los hijos ya están cargados
+        let toggleChildren = block.toggle.children;
+
+        // Si no están cargados, obtenerlos desde la API
+        if (!toggleChildren) {
+            const childrenResponse = await notion.blocks.children.list({
+                block_id: block.id,
+            });
+            toggleChildren = childrenResponse.results;
+        }
+
+        // Procesar los hijos del toggle
+        const toggleContent = await Promise.all(
+            toggleChildren.map(processBlock)
+        );
+
+        return `<details>
+                    <summary>${renderRichText(block.toggle.rich_text)}</summary>
+                    ${toggleContent.join('')}
+                </details>`;
+    }
+
+    return '';
+}
 
 export async function getNotionPage(pageId: string): Promise<string> {
     try {
@@ -109,106 +233,28 @@ export async function getNotionPage(pageId: string): Promise<string> {
             block_id: pageId
         });
 
+        let isInsideNumberedList = false;
+
         const processedBlocks = await Promise.all(blocks.results.map(async block => {
-            // Add this helper function at the top of the file
-            function renderRichText(richText: any[]): string {
-                return richText.map(textItem => {
-                    let content = textItem.plain_text;
-                    const annotations = textItem.annotations;
-                    
-                    // Aplicar formato básico
-                    if (annotations.bold) content = `<b>${content}</b>`;
-                    if (annotations.italic) content = `<i>${content}</i>`;
-                    if (annotations.underline) content = `<u>${content}</u>`;
-                    if (annotations.strikethrough) content = `<s>${content}</s>`;
-                    
-                    if (textItem.href) {
-                        content = `<a href="${textItem.href}" target="_blank">${content}</a>`;
-                    }
-
-                    const hasColor = annotations.color !== 'default';
-                    const hasBackground = annotations.color.endsWith('_background');
-
-                    if (hasColor || hasBackground) {
-                        let extra = '';
-                        if (hasColor && !hasBackground) {
-                            extra = ` class="notion-color-${annotations.color}"`;
-                        }
-                        if (hasBackground) {
-                            const bgColor = annotations.color.replace('_background', '');
-                            extra = ` style="background-color: ${bgColor};"`;
-                        }
-                        return `<span${extra}>${content}</span>`;
-                    }
-                    return content;
-                }).join('');
-            }
-            
-            // Update the paragraph handler
-            if ('paragraph' in block) {
-                return `<p>${renderRichText(block.paragraph.rich_text)}</p>`;
-            }
-            
-            // Update heading handlers
-            if ('heading_1' in block) {
-                return `<h1>${renderRichText(block.heading_1.rich_text)}</h1>`;
-            }
-            if ('heading_2' in block) {
-                return `<h2>${renderRichText(block.heading_2.rich_text)}</h2>`;
-            }
-            if ('heading_3' in block) {
-                return `<h3>${renderRichText(block.heading_3.rich_text)}</h3>`;
-            }
-            
-            // Update list items
-            if ('bulleted_list_item' in block) {
-                return `<li>${renderRichText(block.bulleted_list_item.rich_text)}</li>`;
-            }
-
             if ('numbered_list_item' in block) {
-                return `<li>${renderRichText(block.numbered_list_item.rich_text)}</li>`;
+                const listItem = `<li>${renderRichText(block.numbered_list_item.rich_text)}</li>`;
+                if (!isInsideNumberedList) {
+                    isInsideNumberedList = true;
+                    return `<ol>${listItem}`;
+                }
+                return listItem;
+            } else {
+                if (isInsideNumberedList) {
+                    isInsideNumberedList = false;
+                    return `</ol>${await processBlock(block)}`;
+                }
+                return await processBlock(block);
             }
-
-            
-            // Update to-do items
-            if ('to_do' in block) {
-                return `<input type="checkbox" ${block.to_do.checked ? 'checked' : ''} disabled>
-                        ${renderRichText(block.to_do.rich_text)}`;
-            }
-            
-            // Update quote blocks
-            if ('quote' in block) {
-                return `<blockquote>${renderRichText(block.quote.rich_text)}</blockquote>`;
-            }
-            
-
-            if ('bookmark' in block) {
-                const url = block.bookmark.url;
-                return `<div><a href="${url}" target="_blank" style="text-decoration: none;">
-                    <button class="bigPost"><h4>Abrir.</h4>\n<p>${url}<p></button></a></div>`;
-            }
-
-            // Update code blocks
-            if ('code' in block) {
-                return `<pre><code>${renderRichText(block.code.rich_text)}</code></pre>`;
-            }
-
-            if ('divider' in block) {
-                return '<hr>';
-            }
-
-            if ('embed' in block) {
-                const url = block.embed.url;
-                return `<iframe src="${url}" frameborder="0"></iframe>`;
-            }
-
-            if ('child_page' in block) {
-                return `<a href="/app/i/${block.id}" class="aadm-item" style="text-decoration: none;">
-                    <p class="childpage"  >${block.child_page.title} <span class="material-symbols-outlined"> arrow_forward </span></p>
-                </a>`;
-            }
-
         }));
+
+        if (isInsideNumberedList) {
+            processedBlocks.push('</ol>');
+        }
 
         return processedBlocks.join('\n');
     } catch (error) {

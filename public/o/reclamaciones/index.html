@@ -6,7 +6,6 @@
     <title>aso.app</title>
     <!-- Importar Signature Pad y jsPDF -->
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         #firmaPad {
             border: 1px solid #36e452;
@@ -48,16 +47,13 @@
                    Enviar <span class="material-symbols-outlined"> arrow_forward </span> 
             </button>
 
-
-
         </form>
         <div id="dwl" class="backstage" style="display: none;">
             <div class="popup">
                 <h1>Listo!</h1>
-                <p>Descarga el documento y adjúntalo a administración (administracion@esdmadrid.es).</p>
+                <p>Descarga el documento y adjúntalo a secretaría (<a href="mailto:secretaria@esdmadrid.es">secretaria@esdmadrid.es</a> ).</p>
                 <div style="display: flex; justify-content: center;">
-                <button class="button-black" id="dwlPDF">1. Descargar PDF</button>
-                <button onclick="window.location.href='mailto:administracion@esdmadrid.es'">2. Enviar Mail</button>
+                <button class="button-black" id="dwlPDF">Descargar PDF</button>
             </div>
         </div>
     </main>

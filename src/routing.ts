@@ -7,6 +7,7 @@ import { getRSSFeedHTML, getESDRSSFeedHTML } from './rss';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { generatePDF } from './ext/genPDF';
+import { execSync } from 'child_process';
 
 const app = express();
 const PORT = 3000;
@@ -169,6 +170,28 @@ export const routing = (app: any) => {
         } catch (error) {
             console.error('Error en la ruta /aadm:', error);
             res.status(500).send('Internal Server Error');
+        }
+    });
+    
+    app.get('/app/config', (req: Request, res: Response) => {
+        fs.readFile(path.join(__dirname, '../public/settings.html'), 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Error reading file');
+                return;
+            }
+            navGen(data, res);
+        });
+    });
+
+    app.get('/ver', (req: Request, res: Response) => {
+        try {
+            const version = require(path.join(__dirname, '../package.json')).version;
+            const commit = execSync('git rev-parse --short HEAD').toString().trim();
+            const channel = process.env.CANAL ?? 'Desconocido';
+            res.json({ version, commit, channel });
+        } catch (error) {
+            console.error('Error al obtener la versión o el commit:', error);
+            res.status(500).json({ version: 'Error', commit: 'Error' });
         }
     });
 

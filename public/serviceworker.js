@@ -10,9 +10,10 @@ self.addEventListener("install", function (e) {
                 "/formula.js",
                 "/manifest.json",
                 "/network",
-                "fonts/PKiko-Regular.otf",
-                "fonts/DMMono-Regular.ttf",
-                "fonts/NeueMontreal-Regular.ttf",
+                "/fonts/PKiko-Regular.otf",
+                "/fonts/DMMono-Regular.ttf",
+                "/fonts/NeueMontreal-Regular.ttf",
+                "/icons/material-symbols/index.css",
             ]);
         })
     );

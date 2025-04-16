@@ -1,5 +1,9 @@
 /* CSS Compartido aso.app */
 /** Externos **/
+
+@import url('/icons/material-symbols/index.css'); 
+
+
 @font-face {
     font-family: P-Kiko;
     src: url('/fonts/PKiko-Regular.otf') format('opentype');
@@ -132,11 +136,13 @@ body {
 main{
     display: flex;
     justify-content: left;
-/*    height: calc(100vh - 100px); - a lo mejor se quita */
     width: calc(100% - 60px);
+
     margin: 30px;
     flex-direction: column;
     opacity: 0;
+    overflow-y: scroll;
+
 }
 
 
@@ -275,10 +281,10 @@ h1{
 }
 
 h2{
-    font-family: P-Kiko, serif;
-    font-style: italic;
-    font-size: 2em;
-    color: #040406;
+    font-family: DMMono, monospace;
+    font-weight: 100;
+    font-size: 1.6em;
+    color: #040406d3;
     margin: 20 0 10 0px;
 
 }
@@ -290,6 +296,12 @@ h3{
     color: #040406;
     margin: 20 0 10 0px;
     border-bottom: 2px solid #36e452;
+    a{
+        
+        text-decoration: none;
+        color: #040406;
+
+    }
 }
 
 hr{
@@ -476,6 +488,7 @@ textarea{
     width: 100%;
     flex-direction: column;
 }
+
 
 .button-black{
     background-color: #040406;
