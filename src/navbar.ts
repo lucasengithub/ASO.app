@@ -7,19 +7,6 @@ export const barData = (
         document.addEventListener('DOMContentLoaded', () => {
             // Fade out justo antes de navegar
             const navLinks = document.querySelectorAll('#aso-bar a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const mainEl = document.querySelector('main');
-                    if (mainEl) {
-                        mainEl.style.transition = 'opacity 0.3s';
-                        mainEl.style.opacity = '0';
-                    }
-                    setTimeout(() => {
-                        window.location.href = link.href;
-                    }, 100);
-                });
-            });
 
             // Conserva tu lógica para headings
             const headings = document.querySelectorAll('h1, h2, h3');
