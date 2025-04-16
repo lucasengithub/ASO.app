@@ -1,26 +1,30 @@
 export const barData = (
     `
     <a id="n0" href="/app/aadm">AADM</a>
-    <a id="n1" href="/app">Inicio</a>
+    <a id="n3" href="/app">Inicio</a>
     <a id="n2" href="/app/escuela">Escuela</a>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Fade out justo antes de navegar
-            const navLinks = document.querySelectorAll('#aso-bar a');
 
-            // Conserva tu lógica para headings
-            const headings = document.querySelectorAll('h1, h2, h3');
-            headings.forEach((heading) => {
-                heading.addEventListener('click', () => {
-                    const mainEl = document.querySelector('main');
-                    if (mainEl) {
-                        mainEl.style.transition = 'opacity 0.1s';
-                        mainEl.style.opacity = '0';
-                    }
-                });
+            /// APARECER
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                const mainPlace = document.querySelector('main');
+                if (mainPlace) {
+                    // Asegurarse de que la opacidad inicial sea 0
+                    mainPlace.style.opacity = '0';
+                    mainPlace.style.transition = 'opacity 0.5s ease-in-out'; // Transición suave
+
+                    // Forzar un reflujo para que el navegador reconozca el cambio de estilo
+                    void mainPlace.offsetHeight;
+
+                    // Cambiar la opacidad a 1 después de que se haya cargado la página
+                    mainPlace.style.opacity = '1';
+                } else {
+                    console.error("Elemento 'main' no encontrado.");
+                }
             });
-
-            // Mantén tu lógica para resaltar el link activo
+        
+            /// LINK ACTIVO
             const currentPath = window.location.pathname;
             const anchors = document.querySelectorAll('#aso-bar a');
             anchors.forEach(anchor => {
@@ -28,7 +32,6 @@ export const barData = (
                     anchor.style.color = '#36e452';
                 }
             });
-        });
     </script>
     `
 )
