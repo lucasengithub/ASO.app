@@ -85,9 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     await checkEducaMadridConnection();
                 } else {
                     const url = "/obj.installer/ios/ASO.app.mobileconfig";
-                    const basicApp = document.createElement('a'); // Renombrado a 'basicApp'
+                    const basicApp = document.createElement('a');
                     basicApp.style.display = 'none';
                     basicApp.href = url;
+                    basicApp.type = 'application/x-apple-aspen-config';
                     basicApp.download = 'ASO.app.mobileconfig'; // Nombre del archivo descargado
                     document.body.appendChild(basicApp);
                     basicApp.click();
