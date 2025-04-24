@@ -221,66 +221,78 @@ async function procesarFormulario() {
         // 1. Recopilar los datos del formulario
         const formData = new FormData(document.getElementById('reclamacionesForm'));
         const datosFormulario = {};
-        
+
         // Convertir FormData a objeto JSON
         for (const [key, value] of formData.entries()) {
             datosFormulario[key] = value;
         }
-        
+
         // 2. Agregar la firma como imagen base64
-        datosFormulario.firmaImg = signaturePad.isEmpty() 
-            ? null 
+        datosFormulario.firmaImg = signaturePad.isEmpty()
+            ? null
             : signaturePad.toDataURL('image/png');
-        
+
         // Verificar que se tienen los datos necesarios
         console.log("Datos a enviar:", {
             ...datosFormulario,
             firmaImg: datosFormulario.firmaImg ? "BASE64_DATA (truncada)" : null
         });
-        
+
         console.log("Datos recopilados correctamente. Enviando al servidor...");
-        
+
+        // Obtener el botón de submit
+        const submitButton = document.querySelector('.bigaso');
+        if (submitButton) {
+            submitButton.classList.add('loading'); // Añadir clase para animación
+            submitButton.disabled = true; // Deshabilitar el botón mientras se procesa
+        }
+
         // 3. Enviar al servidor para generar el PDF
         const response = await fetch('/api/generate-pdf', {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/pdf'
             },
             body: JSON.stringify(datosFormulario)
         });
-        
+
         // 4. Manejar la respuesta
         if (!response.ok) {
             throw new Error(`Error en el servidor: ${response.status} ${response.statusText}`);
         }
-        
-        // 5. Obtener y mostrar el PDF generado
+
+        // 5. Obtener el PDF generado y forzar la descarga
         const pdfBlob = await response.blob();
         const pdfUrl = URL.createObjectURL(pdfBlob);
-        const dwl = document.querySelector('#dwl');
 
+        // Mostrar el popup de éxito
+        const dwl = document.querySelector('#dwl');
         if (dwl) {
             dwl.style.display = 'flex';
-            
+
+            // Configurar el botón de descarga dentro del popup
             const dwlPdf = document.querySelector('#dwlPDF');
             if (dwlPdf) {
                 dwlPdf.addEventListener('click', () => {
-                    // Abrir el PDF en una nueva pestaña
-                    window.open(pdfUrl, '_blank');
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = pdfUrl;
+                    downloadLink.download = 'Expone-Solicita.pdf'; // Nombre del archivo descargado
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
                 });
-            } else {
-                console.error("No se encontró el botón con ID 'dwlPDF'.");
             }
-        } else {
-            console.error("No se encontró el contenedor con ID 'dwl'.");
         }
 
-        
-        // 6. Opcional: Limpiar el formulario si se desea
-        // document.getElementById('reclamacionesForm').reset();
+        // 6. Limpiar el estado del botón de submit
+        if (submitButton) {
+            submitButton.classList.remove('loading'); // Quitar clase de animación
+            submitButton.disabled = false; // Habilitar el botón nuevamente
+        }
+
     } catch (error) {
         console.error("Error al procesar el formulario:", error);
-        throw error;
+        mostrarMensaje('Error', `No se pudo generar el PDF: ${error.message}`);
     }
 }

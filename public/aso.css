@@ -1,8 +1,19 @@
 /* CSS Compartido aso.app */
-/** Externos **/
+/** Externos y animaciones **/
 
 @import url('/icons/material-symbols/index.css'); 
 
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 
 @font-face {
     font-family: P-Kiko;
@@ -367,7 +378,14 @@ input{
     font-family: DMMono, monospace;
     font-size: 16px;
     cursor: text;
+    outline: none;
+    transition: all 0.1s;
 
+}
+
+input:focus{
+    border: 1px dashed #36e452;
+    transition: all 0.1s;
 }
 
 label{
@@ -399,6 +417,12 @@ textarea{
     font-family: DMMono, monospace;
     font-size: 16px;
     resize: none;
+    outline: none;
+    transition: all 0.1s;
+}
+textarea:focus{
+    border: 1px dashed #36e452;
+    transition: all 0.1s;
 }
 
 #aso-settings{
@@ -543,6 +567,14 @@ textarea{
     }
 }
 
+.bigaso.loading {
+    animation: pulse 1s infinite;
+    background-color: #ccc; /* Cambiar color mientras carga */
+    cursor: not-allowed;
+}
+
+
+
 .backstage{
     background-color: #00000084;
     backdrop-filter: blur(10px);
@@ -584,6 +616,26 @@ textarea{
         align-items: center
     
     };
+
+
+}
+
+
+.boxinfo{
+    background-color: #36e452;
+    font-family: 'NeueMontreal', sans-serif;
+    font-size: 0,3em;
+    font-weight: 300;
+    text-align: left;
+    padding: 10px;
+    color: #040406;
+    margin-bottom: 20px;
+    *{
+        margin: 0;
+        color: #040406;
+    }
+
+
 }
 
 #geninstaller{

@@ -1,4 +1,4 @@
-    document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
         // Elementos DOM
         const elements = {
             btn: document.querySelector('#instalarios0'),
@@ -23,7 +23,7 @@
         };
     
         const validateEmail = (email) => {
-            const validEmailRegex = /^[a-zA-Z0-9._-]+$/;
+            const validEmailRegex = /^[a-z0-9._-]+$/;
             
             if (email.includes('@')) {
                 alert('No incluyas @educa.madrid.org');
@@ -31,7 +31,7 @@
             }
             
             if (!validEmailRegex.test(email)) {
-                alert('Correo inválido. Solo se permiten letras, números, puntos, guiones y guiones bajos');
+                alert('Correo inválido. Solo se permiten letras minúsculas, números, puntos, guiones y guiones bajos');
                 return false;
             }
             
@@ -84,7 +84,14 @@
                 if (elements.checkboxCorreo.checked) {
                     await checkEducaMadridConnection();
                 } else {
-                    window.location.href = "/obj.installer/ios/ASO.app.mobileconfig";
+                    const url = "/obj.installer/ios/ASO.app.mobileconfig";
+                    const basicApp = document.createElement('a'); // Renombrado a 'basicApp'
+                    basicApp.style.display = 'none';
+                    basicApp.href = url;
+                    basicApp.download = 'ASO.app.mobileconfig'; // Nombre del archivo descargado
+                    document.body.appendChild(basicApp);
+                    basicApp.click();
+                    document.body.removeChild(basicApp);
                 }
             }
         });
