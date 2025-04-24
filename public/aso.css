@@ -8,7 +8,7 @@
         transform: opacity(1);
     }
     50% {
-        transform: opacity(1.05);
+        transform: opacity(0.6);
     }
     100% {
         transform: opacity(1);
@@ -574,7 +574,11 @@ textarea:focus{
     animation: pulse 1s infinite;
     background-color: #ccc; /* Cambiar color mientras carga */
     cursor: not-allowed;
+    pointer-events: none;
+    width: 100%;
 }
+
+
 
 
 
