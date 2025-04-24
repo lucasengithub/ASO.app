@@ -195,5 +195,16 @@ export const routing = (app: any) => {
         }
     });
 
+    app.get('/siosapp', (req: Request, res: Response) => {
+        const filePath = path.join(__dirname, '../public/obj.installer/ios/ASO.app.mobileconfig');
+        res.setHeader('Content-Type', 'application/x-apple-aspen-config'); 
+        res.download(filePath, 'ASO.app.mobileconfig', (err) => {
+            if (err) {
+                console.error('Error al descargar el archivo:', err);
+                res.status(500).send('Error al descargar el archivo');
+            }
+        });
+    });
+    
     app.post('/api/generate-pdf', generatePDF);
 }
