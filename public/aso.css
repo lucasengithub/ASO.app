@@ -5,13 +5,13 @@
 
 @keyframes pulse {
     0% {
-        transform: scale(1);
+        transform: opacity(1);
     }
     50% {
-        transform: scale(1.05);
+        transform: opacity(1.05);
     }
     100% {
-        transform: scale(1);
+        transform: opacity(1);
     }
 }
 
@@ -380,6 +380,7 @@ input{
     cursor: text;
     outline: none;
     transition: all 0.1s;
+    border-radius: 0;
 
 }
 
@@ -419,6 +420,8 @@ textarea{
     resize: none;
     outline: none;
     transition: all 0.1s;
+    border-radius: 0;
+
 }
 textarea:focus{
     border: 1px dashed #36e452;
