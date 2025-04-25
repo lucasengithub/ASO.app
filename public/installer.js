@@ -29,7 +29,7 @@ if (installBtn) {
                 alert('Para instalar la app, por favor, abre esto en Chrome.');
                 navigator.clipboard.writeText(window.location.href)
             } else {
-                alert('Para instalar la app, abre esto en otro navegador.');
+                alert('Para instalar la app, abre esto en Chrome o Safari.');
                 navigator.clipboard.writeText(window.location.href)
             }
         } else if (PWACapable) {
