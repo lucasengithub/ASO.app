@@ -28,7 +28,7 @@ if (installBtn) {
             if (/android/i.test(navigator.userAgent)) {
                 alert('Para instalar la app, por favor, abre esto en Chrome.');
             } else {
-                window.location.href = '/installer';
+                alert('Para instalar la app, por favor, abre esto en otro navegador.');
             }
         } else if (PWACapable) {
             // Caso para otros navegadores con soporte PWA
