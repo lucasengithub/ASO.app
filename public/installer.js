@@ -1,7 +1,5 @@
 // filepath: /Users/lucaspeinado/aso.app/public/install.js
 
-const e = require("express");
-
 // Verificar si el navegador es Chromium o Safari
 const isChromium = window.chrome && /Google Inc/.test(navigator.vendor);
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
