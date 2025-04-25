@@ -14,6 +14,7 @@ self.addEventListener("install", function (e) {
                 "/fonts/DMMono-Regular.ttf",
                 "/fonts/NeueMontreal-Regular.ttf",
                 "/icons/material-symbols/index.css",
+                "/icons/material-symbols/material-symbols-outlined.woff2",
             ]);
         })
     );
