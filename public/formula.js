@@ -9,24 +9,7 @@ async function registerSW() {
     }
 }
 
-// Llamar a registerSW después de definirla
-window.addEventListener('load', () => {
-    registerSW();
 
-    // Si el user agent es de iOS, se agrega padding-bottom de 20px a #aso-bar
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-        const asoBar = document.getElementById('aso-bar');
-        const appDiv = document.getElementsByClassName('app');
-        if (asoBar) {
-            asoBar.style.height = '60px';
-            asoBar.style.paddingBottom = '20px';
-        }
-        if (appDiv) {
-            appDiv.style.height = 'calc(100% - 80px)';
-
-        }
-    }
-});
 
 // backstage-salida
 const backstage = document.querySelector('.backstage');

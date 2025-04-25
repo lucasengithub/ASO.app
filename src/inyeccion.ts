@@ -14,7 +14,7 @@ export const navGen = (content: string | string[], res: Response) => {
         )
         .replace(
             '</head>',
-            `<link rel="icon" type="image/png" href="/icons/192.png" /> \n <link rel="stylesheet" href="/aso.css">  \n <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">\n  <meta name="theme-color" content="white"> \n</head>\n <div id="bCursor"> </div>`
+            `<link rel="icon" type="image/png" href="/icons/192.png" /> \n <link rel="preload" href="/icons/material-symbols/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin="anonymous"> \n   <link rel="stylesheet" href="/aso.css">   \n <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">\n  <meta name="theme-color" content="white"> \n</head>\n <div id="bCursor"> </div>`
         )
         .replace(
             '</html>',

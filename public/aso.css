@@ -2,6 +2,7 @@
 /** Externos y animaciones **/
 
 @import url('/icons/material-symbols/index.css'); 
+@import url('/icons/material-symbols/outlined.css');
 
 @keyframes pulse {
     0% {
@@ -209,6 +210,8 @@ a {
     box-sizing: border-box;
     height: 40px;
     box-shadow: 0px 0px 40px 0px #0000001e;
+
+    
     
     a {
         text-decoration: none;
@@ -836,6 +839,13 @@ textarea:focus{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         width: 100%;
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    #aso-bar {
+        height: 60px;
+        padding-bottom: 20px;
     }
 }
 
