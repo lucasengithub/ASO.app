@@ -51,10 +51,9 @@ async function updateRSSCache(): Promise<void> {
                 const description = item.description[0];
                 limitedHtml += `<div><a href="${link}" target="_blank" style="text-decoration: none;"><button class="bigPost"><h4>${title}</h4>\n<p>${description}</p></button></a></div>`;
             });
-            
-            // Añadir botón "Ver todo" al final de la versión limitada
-            limitedHtml += `<div><a href="/app/posts" style="text-decoration: none;"><button class="bigaso">Ver todas las noticias <span class="material-symbols-outlined">arrow_forward</span></button></a></div>`;
-            
+
+
+
             rssCache.asoFeed = html;
             rssCache.asoFeedLimited = limitedHtml;
             console.log(`[${new Date().toISOString()}] Feed ASO actualizado: ${items.length} entradas (3 para vista limitada)`);
