@@ -14,11 +14,27 @@ export const navGen = (content: string | string[], res: Response) => {
         )
         .replace(
             '</head>',
-            `<link rel="icon" type="image/png" href="/icons/192.png" /> \n <link rel="stylesheet" href="/aso.css">  \n <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">\n  <meta name="theme-color" content="white"> \n</head>\n <div id="bCursor"> </div>`
+            `<link rel="icon" type="image/png" href="/icons/192.png" />
+            <link rel="stylesheet" href="/aso.css">
+            <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+            <meta name="theme-color" content="white">
+            <meta name="apple-mobile-web-app-status-bar-style" content="white">
+            <link rel="preload" href="/icons/material-symbols/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin="anonymous" fetchpriority="high">
+            <style>
+              @font-face {
+                font-family: 'Material Symbols Outlined';
+                font-display: swap;
+                src: url('/icons/material-symbols/material-symbols-outlined.woff2') format('woff2');
+              }
+            </style>
+            </head>\n <div id="bCursor"> </div>`
         )
         .replace(
             '</html>',
-            `<script>${helloC}</script> \n <script>${cursorData}</script> \n <script src="/formula.js"></script>  \n </html>`
+            `<script defer>${helloC}</script>
+            <script defer>${cursorData}</script>
+            <script defer src="/formula.js"></script>
+            </html>`
         )
     res.send(modifiedData)
 }

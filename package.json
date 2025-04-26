@@ -1,6 +1,6 @@
 {
   "name": "aso.app",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "AsoAPP",
   "main": "dist/index.js",
   "scripts": {
@@ -21,11 +21,18 @@
     "node-fetch": "^3.3.2",
     "pdf-lib": "^1.17.1",
     "typescript": "^5.7.3",
+    "web-push": "^3.6.7",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.9",
+    "@types/web-push": "^3.6.4",
     "@types/xml2js": "^0.4.14"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "subscriptions.json"
+    ]
   }
 }

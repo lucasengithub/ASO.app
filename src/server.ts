@@ -1,12 +1,13 @@
+import dotenv from 'dotenv';
+dotenv.config()
+
 import express, { Request, Response } from 'express';
 import { getNotionPage } from './notion';
-import dotenv from 'dotenv';
 import { navGen } from './inyeccion';
 import path from 'path';
 import { out } from './out';
 import { routing } from './routing';
 
-dotenv.config();
 const app = express();
 
 app.use((req, res, next) => {
