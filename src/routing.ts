@@ -8,6 +8,52 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { generatePDF } from './ext/genPDF';
 import { execSync } from 'child_process';
+import { 
+    saveSubscription, 
+    getVapidPublicKey, 
+    validateToken, 
+    sendNotification,
+    updateNotificationPreferences
+} from './webpush';
+
+const subscriptionsFile = path.join(__dirname, '../subscriptions.json');
+
+// Cargar suscripciones desde el archivo
+function loadSubscriptions(): any[] {
+    if (fs.existsSync(subscriptionsFile)) {
+        try {
+            const data = fs.readFileSync(subscriptionsFile, 'utf-8');
+            return JSON.parse(data);
+        } catch (error) {
+            console.error('Error al cargar subscriptions.json:', error);
+            return [];
+        }
+    }
+    return [];
+}
+
+// Guardar suscripciones en el archivo
+function saveSubscriptions(subscriptions: any[]): void {
+    fs.writeFileSync(subscriptionsFile, JSON.stringify(subscriptions, null, 2));
+}
+
+// Inicializar las suscripciones
+let subscriptions = loadSubscriptions();
+
+// Agregar una nueva suscripción
+function addSubscription(subscription: any): boolean {
+    if (!subscriptions.find(sub => sub.endpoint === subscription.endpoint)) {
+        subscriptions.push(subscription);
+        saveSubscriptions(subscriptions);
+        return true;
+    }
+    return false; // Ya existe la suscripción
+}
+
+// Obtener todas las suscripciones
+function getSubscriptions(): any[] {
+    return subscriptions;
+}
 
 const app = express();
 const PORT = 3000;
@@ -231,4 +277,86 @@ export const routing = (app: any) => {
     });
     
     app.post('/api/generate-pdf', generatePDF);
+
+    // Endpoint para obtener clave pública VAPID
+    app.get('/api/push-public-key', (req: Request, res: Response) => {
+        res.send(getVapidPublicKey());
+    });
+    
+    // Endpoint para suscribirse a notificaciones
+    app.post('/api/push-subscribe', async (req: Request, res: Response) => {
+        try {
+            const subscription = req.body;
+
+            // Verifica que la suscripción sea válida antes de guardarla
+            if (!subscription || !subscription.endpoint) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Datos de suscripción inválidos' 
+                });
+            }
+
+            const result = addSubscription(subscription);
+            if (result) {
+                res.status(201).json({ success: true, message: 'Suscripción guardada' });
+            } else {
+                res.status(200).json({ success: true, message: 'Suscripción ya existente' });
+            }
+        } catch (error) {
+            console.error('Error en /api/push-subscribe:', error);
+            res.status(500).json({ 
+                success: false, 
+                message: 'Error interno del servidor' 
+            });
+        }
+    });
+    
+    // Endpoint para actualizar preferencias de notificaciones
+    app.post('/api/push-preferences', async (req: Request, res: Response) => {
+        try {
+            const preferences = req.body;
+            updateNotificationPreferences(preferences);
+            res.status(200).json({ success: true });
+        } catch (error) {
+            console.error('Error en /api/push-preferences:', error);
+            res.status(500).json({ 
+                success: false, 
+                message: 'Error interno del servidor' 
+            });
+        }
+    });
+    
+    // Endpoint para enviar notificaciones personalizadas
+    app.get('/api/notify', async (req: Request, res: Response) => {
+        try {
+            const { title, description, url } = req.query;
+
+            const subs = getSubscriptions();
+            if (subs.length === 0) {
+                return res.status(200).json({ success: false, message: 'No hay suscriptores' });
+            }
+
+            for (const sub of subs) {
+                try {
+                    await sendNotification(
+                        title as string,
+                        description as string,
+                        url as string || '/',
+                        '/icons/192.png',
+                        'custom'
+                    );
+                } catch (error) {
+                    console.error('Error al enviar notificación a un suscriptor:', error);
+                }
+            }
+
+            res.json({ success: true, message: 'Notificaciones enviadas' });
+        } catch (error) {
+            console.error('Error en /api/notify:', error);
+            res.status(500).json({ 
+                success: false, 
+                message: 'Error interno del servidor' 
+            });
+        }
+    });
 }

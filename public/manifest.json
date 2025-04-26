@@ -1,12 +1,12 @@
 {
-	"name":"ASO.app",
-	"short_name":"ASO.app",
-	"start_url":"/app",
-	"display":"standalone",
-	"background_color":"#36e452",
-	"theme_color":"white",
-	"scope": ".",
-	"description":"La ASO.app reúne todo lo que necesitas para la ESD.",
+	"name": "ASO.app",
+	"short_name": "ASO.app",
+	"start_url": "/app",
+	"display": "standalone",
+	"background_color": "#36e452",
+	"theme_color": "#36e452",
+	"scope": "/",
+	"description": "La ASO.app reúne todo lo que necesitas para la ESD.",
 	"screenshots": [
 		{
 		  "src": "/screenshots/m/IMG_2073.PNG",
@@ -26,7 +26,6 @@
 		  "sizes": "1179x2556",
 		  "form_factor": "narrow"
 		},
-
 		{
 		  "src": "/screenshots/m/IMG_2077.PNG",
 		  "type": "image/png",
@@ -51,18 +50,17 @@
 		  "sizes": "1179x2556",
 		  "form_factor": "narrow"
 		}
-
 	  ],
-	"icons":[
-	{
-	"src":"icons/192.png",					 
-	"sizes":"192x192",
-	"type":"image/png"
-	},
-	{
-	"src":"icons/512.png",
-	"sizes":"512x512",
-	"type":"image/png"
-	}
-]
+	"icons": [
+		{
+			"src": "icons/192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "icons/512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
 }

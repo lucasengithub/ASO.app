@@ -1,4 +1,5 @@
-import { parseStringPromise } from 'xml2js'
+import { parseStringPromise } from 'xml2js';
+import { sendNotification } from './webpush';
 
 const URL_ASO_FEED = "https://asoaadm.substack.com/feed";
 const URL_ESD_FEED = "https://admin-dev.esdmadrid.es/rss";
@@ -9,6 +10,8 @@ interface RSSCache {
     asoFeedLimited: string; // Versión limitada para la página principal
     esdFeed: string;
     lastUpdated: number;
+    asoItems: Array<{title: string, link: string, description: string, pubDate?: string}>;
+    esdItems: Array<{title: string, link: string, pubDate?: string}>;
 }
 
 // Caché global
@@ -16,7 +19,9 @@ let rssCache: RSSCache = {
     asoFeed: "Cargando feed...",
     asoFeedLimited: "Cargando feed...",
     esdFeed: "Cargando feed ESD...",
-    lastUpdated: 0
+    lastUpdated: 0,
+    asoItems: [],
+    esdItems: []
 };
 
 // Función para actualizar la caché
@@ -35,6 +40,38 @@ async function updateRSSCache(): Promise<void> {
             let limitedHtml = "";
             const items = parsed.rss.channel[0].item;
             
+            // Crear array de items para comparar después
+            const newAsoItems = items.map((item: any) => ({
+                title: item.title[0],
+                link: item.link[0],
+                description: item.description[0],
+                pubDate: item.pubDate ? item.pubDate[0] : new Date().toISOString()
+            }));
+            
+            // Verificar si hay nuevos items comparando con la caché anterior
+            if (rssCache.asoItems.length > 0) {
+                const newItems = newAsoItems.filter((newItem: {title: string, link: string, description: string, pubDate?: string}) => 
+                    !rssCache.asoItems.some(oldItem => oldItem.link === newItem.link)
+                );
+                
+                // Si hay nuevos items, enviar notificaciones
+                if (newItems.length > 0) {
+                    console.log(`[${new Date().toISOString()}] Se encontraron ${newItems.length} nuevos posts en ASO feed`);
+                    // Enviar notificación solo del primer ítem nuevo
+                    const item = newItems[0];
+                    await sendNotification(
+                        'Nueva publicación de AADM',
+                        item.title,
+                        item.link,
+                        '/icons/192.png',
+                        'ASO'
+                    );
+                }
+            }
+            
+            // Actualizar la caché con los nuevos items
+            rssCache.asoItems = newAsoItems;
+            
             // Procesar todos los items para la versión completa
             items.forEach((item: any) => {
                 const title = item.title[0];
@@ -52,8 +89,6 @@ async function updateRSSCache(): Promise<void> {
                 limitedHtml += `<div><a href="${link}" target="_blank" style="text-decoration: none;"><button class="bigPost"><h4>${title}</h4>\n<p>${description}</p></button></a></div>`;
             });
 
-
-
             rssCache.asoFeed = html;
             rssCache.asoFeedLimited = limitedHtml;
             console.log(`[${new Date().toISOString()}] Feed ASO actualizado: ${items.length} entradas (3 para vista limitada)`);
@@ -68,6 +103,38 @@ async function updateRSSCache(): Promise<void> {
             const parsed = await parseStringPromise(str);
             let html = "";
             const items = parsed.rss.channel[0].item;
+            
+            // Crear array de items para comparar después
+            const newEsdItems = items.map((item: any) => ({
+                title: item.title[0],
+                link: item.link[0].replace('https://admin-dev.esdmadrid.es/', 'https://esdmadrid.es/posts/'),
+                pubDate: item.pubDate ? item.pubDate[0] : new Date().toISOString()
+            }));
+            
+            // Verificar si hay nuevos items comparando con la caché anterior
+            if (rssCache.esdItems.length > 0) {
+                const newItems = newEsdItems.filter((newItem: {title: string, link: string, pubDate?: string}) => 
+                    !rssCache.esdItems.some(oldItem => oldItem.link === newItem.link)
+                );
+                
+                // Si hay nuevos items, enviar notificaciones
+                if (newItems.length > 0) {
+                    console.log(`[${new Date().toISOString()}] Se encontraron ${newItems.length} nuevos posts en ESD feed`);
+                    // Enviar notificación solo del primer ítem nuevo
+                    const item = newItems[0];
+                    await sendNotification(
+                        'Nueva publicación de ESD',
+                        item.title,
+                        item.link,
+                        '/icons/192.png',
+                        'ESD'
+                    );
+                }
+            }
+            
+            // Actualizar la caché con los nuevos items
+            rssCache.esdItems = newEsdItems;
+            
             // Limitar a 5 posts como máximo
             const limitedItems = items.slice(0, 5);
             limitedItems.forEach((item: any) => {
