@@ -474,18 +474,18 @@ textarea:focus{
 /** Contenedores **/
 
 
-#notion-page{
-    height: calc(100vh - 70px);
-    max-width: 800px;
-    overflow-y: scroll;
-    position: fixed;
-    bottom: 0;
+.notion-page{
     display: flex;
-    align-items: left;  
-    justify-content: left; 
-    align-self: center;
-    width: 100%;
     flex-direction: column;
+    align-self: center;
+    justify-content: left;
+    align-items: left;
+    padding: 0px;
+    width: 100%; 
+    margin: 0 auto; 
+    padding-top: 70px;
+    padding-bottom: 20px;
+
 }
 
 #border{
