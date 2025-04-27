@@ -84,7 +84,8 @@ async function subscribeToPush() {
 function showNotifyAlert() {
     const notifyAlert = document.getElementById('notifyalert');
     if (notifyAlert) {
-        notifyAlert.style.display = 'flex';
+        notifyAlert.style.display = 'none';
+        console.log("no hay notis,lo he basado en la ia y es un mojon, hay que hacerlo bien");
         notifyAlert.addEventListener('click', async () => {
             const result = await subscribeToPush();
             if (result) {
