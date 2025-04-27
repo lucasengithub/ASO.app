@@ -287,8 +287,8 @@ export async function getNotionPage(pageId: string): Promise<string> {
             }
         }
 
-        // Retornar el contenido con el título como <h1>
-        return `<div id="notion-page"><h1 style="padding-top:20px">${pageTitle}</h1>${processedBlocks.join('')}</div>`;
+        // Retornar el contenido con el título como <h1> y asegurar que el contenido se ajuste correctamente
+        return `<div class="notion-content"><h1 style="padding-top:20px">${pageTitle}</h1>${processedBlocks.join('')}</div>`;
 
     } catch (error) {
         console.error('Error fetching page content:', error);
