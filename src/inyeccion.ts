@@ -17,8 +17,15 @@ export const navGen = (content: string | string[], res: Response) => {
             `<link rel="icon" type="image/png" href="/icons/192.png" />
             <link rel="stylesheet" href="/aso.css">
             <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+            <meta name="apple-mobile-web-app-capable" content="yes">
+            <meta name="apple-mobile-web-app-status-bar-style" content="white-translucent">
+            <link rel="apple-touch-icon" href="/icons/192.png">
+            <meta name="apple-mobile-web-app-title" content="ASO.app">
             <meta name="theme-color" content="white">
-            <meta name="apple-mobile-web-app-status-bar-style" content="white">
+            <meta name="description" content="La ASO.app reúne todo lo que necesitas para la ESD.">
+            <meta name="keywords" content="ASO, ESD, Escuela, Aplicación, App, Noticias, Notificaciones">
+            <meta name="author" content="aadm.space">
+            <meta name="robots" content="index, follow">
             <link rel="preload" href="/icons/material-symbols/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin="anonymous" fetchpriority="high">
             <style>
               @font-face {

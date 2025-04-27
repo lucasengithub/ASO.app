@@ -1,5 +1,4 @@
 import { parseStringPromise } from 'xml2js';
-import { sendNotification } from './webpush';
 
 const URL_ASO_FEED = "https://asoaadm.substack.com/feed";
 const URL_ESD_FEED = "https://admin-dev.esdmadrid.es/rss";
@@ -53,20 +52,6 @@ async function updateRSSCache(): Promise<void> {
                 const newItems = newAsoItems.filter((newItem: {title: string, link: string, description: string, pubDate?: string}) => 
                     !rssCache.asoItems.some(oldItem => oldItem.link === newItem.link)
                 );
-                
-                // Si hay nuevos items, enviar notificaciones
-                if (newItems.length > 0) {
-                    console.log(`[${new Date().toISOString()}] Se encontraron ${newItems.length} nuevos posts en ASO feed`);
-                    // Enviar notificación solo del primer ítem nuevo
-                    const item = newItems[0];
-                    await sendNotification(
-                        'Nueva publicación de AADM',
-                        item.title,
-                        item.link,
-                        '/icons/192.png',
-                        'ASO'
-                    );
-                }
             }
             
             // Actualizar la caché con los nuevos items
@@ -116,20 +101,6 @@ async function updateRSSCache(): Promise<void> {
                 const newItems = newEsdItems.filter((newItem: {title: string, link: string, pubDate?: string}) => 
                     !rssCache.esdItems.some(oldItem => oldItem.link === newItem.link)
                 );
-                
-                // Si hay nuevos items, enviar notificaciones
-                if (newItems.length > 0) {
-                    console.log(`[${new Date().toISOString()}] Se encontraron ${newItems.length} nuevos posts en ESD feed`);
-                    // Enviar notificación solo del primer ítem nuevo
-                    const item = newItems[0];
-                    await sendNotification(
-                        'Nueva publicación de ESD',
-                        item.title,
-                        item.link,
-                        '/icons/192.png',
-                        'ESD'
-                    );
-                }
             }
             
             // Actualizar la caché con los nuevos items
