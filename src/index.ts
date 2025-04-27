@@ -1,8 +1,7 @@
 import dotenv from 'dotenv';
 import cluster from 'cluster';
 import os from 'os';
-import app from './server'; // Tu aplicación Express
-
+import app from './server'; 
 dotenv.config();
 
 const numCPUs = os.cpus().length;
