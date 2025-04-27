@@ -1,5 +1,7 @@
 import { Client } from '@notionhq/client';
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import { get } from 'http';
+import { title } from 'process';
 
 
 if (!process.env.NOTION_KEY) {
@@ -9,6 +11,14 @@ if (!process.env.NOTION_KEY) {
 if (!process.env.AADM_DATABASE_ID) {
     throw new Error('AADM_DATABASE_ID is not defined in environment variables');
 }
+if (!process.env.ESCUELA_DATABASE_ID) {
+    throw new Error('ESCUELA_DATABASE_ID is not defined in environment variables');
+}
+
+if (!process.env.INICIO_DATABASE_ID) {
+    throw new Error('INICIO_DATABASE_ID is not defined in environment variables');
+}
+
 
 const notion = new Client({
     auth: process.env.NOTION_KEY
@@ -227,6 +237,7 @@ async function processBlock(block: any): Promise<string> {
     return '';
 }
 
+
 export async function getNotionPage(pageId: string): Promise<string> {
     try {
         const blocks = await notion.blocks.children.list({
@@ -256,7 +267,29 @@ export async function getNotionPage(pageId: string): Promise<string> {
             processedBlocks.push('</ol>');
         }
 
-        return processedBlocks.join('\n');
+        // Obtener el título de la página
+        const page = await notion.pages.retrieve({ page_id: pageId }) as PageObjectResponse;
+        let pageTitle = '';
+        
+        // Extract title from properties
+        if (page.properties && 'title' in page.properties) {
+            const titleProp = page.properties.title as { type: 'title'; title: Array<{ plain_text: string }> };
+            pageTitle = titleProp.title.map(t => t.plain_text).join('');
+        } else {
+            // Try to find the title property (it might have a different name)
+            for (const key in page.properties) {
+                const prop = page.properties[key];
+                if (prop.type === 'title') {
+                    const titleProp = prop as { type: 'title'; title: Array<{ plain_text: string }> };
+                    pageTitle = titleProp.title.map(t => t.plain_text).join('');
+                    break;
+                }
+            }
+        }
+
+        // Retornar el contenido con el título como <h1>
+        return `<div id="notion-page"><h1 style="padding-top:20px">${pageTitle}</h1>${processedBlocks.join('')}</div>`;
+
     } catch (error) {
         console.error('Error fetching page content:', error);
         return '<p>Error loading content</p>';
