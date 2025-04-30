@@ -9,8 +9,11 @@ import { getWebItems } from './notion';
 
 export const webRoutes = (webRT: express.Application) => {
 
-
-    webRT.get('/id/links/', async (req: Request, res: Response) => {
+    webRT.get('/aso.css', (req: Request, res: Response) => {
+        res.sendFile(path.join(__dirname, '../public/aso.css'));
+    });
+    
+    webRT.get('/links/', async (req: Request, res: Response) => {
         try {
             const items = await getWebItems();
             const indexPath = path.join(__dirname, '../aadmEnv/index.html');
@@ -19,7 +22,7 @@ export const webRoutes = (webRT: express.Application) => {
 
             const itemsHtml = items.map(item => {  
                 const { pageId, name } = item;
-                return '<li class="item"><a href="/id/' + pageId + '" class="itemLink">' + name + '</a></li>';
+                return '<li class="item"><a href="/' + pageId + '" class="itemLink">' + name + '</a></li>';
             }).join('\n');
 
             // Inyecta el contenido de notion
@@ -30,13 +33,20 @@ export const webRoutes = (webRT: express.Application) => {
 
 
             res.send(modData);
+
         } catch (error) {
             res.status(500).send('Internal Server Error');
         }
     });
 
+webRT.get('/', (req: Request, res: Response) => {
+        res.redirect('https://aadm.space');
+    
+    });
+    
 
-webRT.get('/id/:pageId', async (req: Request, res: Response) => {   
+
+webRT.get('/:pageId', async (req: Request, res: Response) => {   
     const pageData = await getNotionPage(req.params.pageId);
     const pageTitle = pageData.pageTitle || 'aso';
     const content = fs.readFileSync(path.join(__dirname, '../aadmEnv/index.html'), 'utf8');
@@ -58,16 +68,14 @@ webRT.get('/id/:pageId', async (req: Request, res: Response) => {
 // de app a web
 
 webRT.get('/app/i/:pageId', async (req: Request, res: Response) => {
-    res.redirect(`/id/${req.params.pageId}`);
+    res.redirect(`/${req.params.pageId}`);
 });
 webRT.get('/app', async (req: Request, res: Response) => {
     res.redirect(`https://app.aadm.space`);
 });
 // Rutas de básicos en `webRT`
 
-webRT.get('/aso.css', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../public/aso.css'));
-});
+
 
 webRT.get('/formula.js', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, '../public/formula.js'));
