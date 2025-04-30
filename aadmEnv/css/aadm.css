@@ -1,0 +1,31 @@
+main{
+    opacity: 1;
+    
+}
+
+*{
+    cursor: auto;
+    -webkit-user-select:auto;
+    -moz-user-select:auto;
+    -ms-user-select:auto;
+    user-select:auto;
+    -webkit-touch-callout:auto;
+    
+}
+
+
+.aadm-item{
+    cursor: auto;
+}
+html, body{
+    cursor: auto;
+    background-color: rgb(253, 253, 253);
+}
+
+.hTitle{
+    padding-top: 0;
+    text-align: center;
+}
+a{
+    cursor: auto;
+}

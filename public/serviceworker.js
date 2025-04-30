@@ -1,4 +1,4 @@
-var staticCacheName = "pwa";
+var staticCacheName = "asocache01"; 
 
 self.addEventListener("install", function (e) {
     e.waitUntil(
@@ -64,35 +64,121 @@ self.addEventListener("install", function (e) {
 
 self.addEventListener("fetch", function (e) {
     e.respondWith(
-        fetch(e.request)
-            .then(function (response) {
-                // Solo almacenar en caché solicitudes GET
-                if (e.request.method === "GET") {
-                    var responseClone = response.clone();
-                    caches.open(staticCacheName).then(function (cache) {
-                        cache.put(e.request, responseClone);
-                    });
+        caches.match(e.request).then(function(cachedResponse) {
+            // Estrategia "Cache First, Network Fallback"
+            if (cachedResponse) {
+                // Verificamos si la respuesta en caché está "fresca" (menos de 24 horas)
+                const cachedDate = new Date(cachedResponse.headers.get('date'));
+                const now = new Date();
+                const cacheAge = now.getTime() - cachedDate.getTime();
+                const maxAge = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
+                
+                // Si la caché es reciente, la devolvemos inmediatamente
+                if (cacheAge < maxAge) {
+                    return cachedResponse;
                 }
-                return response;
-            })
-            .catch(function () {
-                // Sin conexión: se intenta la versión cacheada o se redirige a "/network"
-                return caches.match(e.request).then(function (response) {
-                    return response || caches.match("/network");
+                
+                // Si la caché es antigua, intentamos actualizar en segundo plano
+                const fetchPromise = fetch(e.request).then(function(networkResponse) {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const responseToCache = networkResponse.clone();
+                        caches.open(staticCacheName).then(function(cache) {
+                            cache.put(e.request, responseToCache);
+                        });
+                    }
+                    return networkResponse;
+                }).catch(function() {
+                    // Si falla la red, usamos la caché aunque sea antigua
+                    return cachedResponse;
                 });
-            })
+                
+                // Devolvemos la caché mientras actualizamos en segundo plano
+                return cachedResponse;
+            }
+            
+            // Si no está en caché, hacemos la solicitud a la red
+            return fetch(e.request)
+                .then(function(response) {
+                    // Solo almacenar en caché solicitudes GET válidas
+                    if (e.request.method === "GET" && response.status === 200) {
+                        // Excluimos solicitudes de análisis o tracking
+                        if (!e.request.url.includes('analytics') && 
+                            !e.request.url.includes('tracking')) {
+                            var responseClone = response.clone();
+                            caches.open(staticCacheName).then(function(cache) {
+                                cache.put(e.request, responseClone);
+                            });
+                        }
+                    }
+                    return response;
+                })
+                .catch(function() {
+                    // Si falla la red y no hay caché, redirigir a la página de sin conexión
+                    return caches.match("/network");
+                });
+        })
     );
 });
 
 self.addEventListener('message', function(event) {
     if (event.data && event.data.action === 'clearCache') {
-        caches.keys().then(function(cacheNames) {
-            return Promise.all(
-                cacheNames.map(function(cacheName) {
-                    return caches.delete(cacheName);
-                })
-            );
-        });
-        console.log('Cache borrado');
+        event.waitUntil(
+            caches.keys().then(function(cacheNames) {
+                return Promise.all(
+                    cacheNames.map(function(cacheName) {
+                        console.log('Borrando caché:', cacheName);
+                        return caches.delete(cacheName);
+                    })
+                ).then(function() {
+                    // Notificar al cliente que la caché se ha borrado
+                    if (event.source) {
+                        event.source.postMessage({
+                            action: 'cacheCleared',
+                            success: true,
+                            timestamp: new Date().getTime()
+                        });
+                    }
+                    console.log('Todas las cachés han sido borradas');
+                });
+            })
+        );
+    } else if (event.data && event.data.action === 'getCacheSize') {
+        // Nueva funcionalidad para obtener el tamaño de la caché
+        event.waitUntil(
+            caches.open(staticCacheName).then(function(cache) {
+                return cache.keys().then(function(keys) {
+                    return Promise.all(
+                        keys.map(function(request) {
+                            return cache.match(request).then(function(response) {
+                                return response.clone().blob().then(function(blob) {
+                                    return blob.size;
+                                });
+                            });
+                        })
+                    ).then(function(sizes) {
+                        // Sumar todos los tamaños
+                        const totalSize = sizes.reduce((acc, size) => acc + size, 0);
+                        // Enviar el tamaño total al cliente
+                        if (event.source) {
+                            event.source.postMessage({
+                                action: 'cacheSizeResult',
+                                size: totalSize,
+                                timestamp: new Date().getTime()
+                            });
+                        }
+                    });
+                });
+            }).catch(function(error) {
+                console.error('Error al calcular el tamaño de la caché:', error);
+                if (event.source) {
+                    event.source.postMessage({
+                        action: 'cacheSizeResult',
+                        error: true,
+                        message: error.message,
+                        timestamp: new Date().getTime()
+                    });
+                }
+            })
+        );
     }
 });

@@ -81,7 +81,7 @@ async function updateRSSCache(): Promise<void> {
             console.error(`[${new Date().toISOString()}] Error al actualizar el caché del feed ASO:`, err);
         }
         
-        // Actualizar el feed ESD (máximo 5 posts)
+        // Actualizar el feed ESD (máximo 8 posts)
         try {
             const response = await fetch(URL_ESD_FEED);
             const str = await response.text();
@@ -106,8 +106,8 @@ async function updateRSSCache(): Promise<void> {
             // Actualizar la caché con los nuevos items
             rssCache.esdItems = newEsdItems;
             
-            // Limitar a 5 posts como máximo
-            const limitedItems = items.slice(0, 5);
+            // Limitar a 8 posts como máximo
+            const limitedItems = items.slice(0, 8);
             limitedItems.forEach((item: any) => {
                 const title = item.title[0];
                 const badLink = item.link[0];
@@ -150,7 +150,7 @@ export async function getLimitedRSSFeedHTML(): Promise<string> {
     return rssCache.asoFeedLimited;
 }
 
-// Función para obtener el feed ESD desde el caché (limitado a 5 posts)
+// Función para obtener el feed ESD desde el caché (limitado a 8 posts)
 export async function getESDRSSFeedHTML(): Promise<string> {
     // Si el caché no se ha inicializado todavía, intentamos actualizarlo
     if (rssCache.lastUpdated === 0) {

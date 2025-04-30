@@ -392,6 +392,10 @@ input:focus{
     transition: all 0.1s;
 }
 
+.hTitle{
+    padding-top:20px
+}
+
 label{
     display: inline-flex;
     align-items: center;
@@ -829,6 +833,10 @@ textarea:focus{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         width: 100%;
+    }
+
+    .notion-page{
+        max-width: 800px;
     }
 }
 

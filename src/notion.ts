@@ -19,6 +19,9 @@ if (!process.env.INICIO_DATABASE_ID) {
     throw new Error('INICIO_DATABASE_ID is not defined in environment variables');
 }
 
+if (!process.env.WEB_DATABASE_ID) {
+    throw new Error('WEB_DATABASE_ID is not defined in environment variables');
+}
 
 const notion = new Client({
     auth: process.env.NOTION_KEY
@@ -107,6 +110,29 @@ export async function getHomeItems(): Promise<AADMItem[]> {
     }
     catch (error) {
         console.error('Error fetching Home items:', error);
+        return [];
+    }
+}
+
+export async function getWebItems(): Promise<AADMItem[]> {
+    try {
+        const response = await notion.databases.query({
+            database_id: process.env.WEB_DATABASE_ID!
+        });
+
+        return response.results.map((page) => {
+            const p = page as PageObjectResponse;
+            const properties = p.properties;
+            
+            const nombreProp = properties['Nombre'] as { type: 'title'; title: Array<{ plain_text: string }> };
+            
+            return {
+                name: nombreProp.title[0]?.plain_text || '',
+                pageId: page.id,
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching Web items:', error);
         return [];
     }
 }
@@ -238,7 +264,7 @@ async function processBlock(block: any): Promise<string> {
 }
 
 
-export async function getNotionPage(pageId: string): Promise<string> {
+export async function getNotionPage(pageId: string): Promise<{ content: string, pageTitle: string }> {
     try {
         const blocks = await notion.blocks.children.list({
             block_id: pageId
@@ -286,10 +312,16 @@ export async function getNotionPage(pageId: string): Promise<string> {
             }
         }
 
-        return `<div class="notion-page"><h1 style="padding-top:20px">${pageTitle}</h1>${processedBlocks.join('')}</div>`;
+        return {
+            content: `<div class="notion-page"><h1 class="hTitle">${pageTitle}</h1>${processedBlocks.join('')}</div>`,
+            pageTitle: pageTitle
+        };
 
     } catch (error) {
         console.error('Error fetching page content:', error);
-        return '<p>Error loading content</p>';
+        return {
+            content: '<p>Error loading content</p>',
+            pageTitle: 'Error'
+        };
     }
 }

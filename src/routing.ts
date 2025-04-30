@@ -48,8 +48,7 @@ function getSubscriptions(): any[] {
     return subscriptions;
 }
 
-const app = express();
-const PORT = 3000;
+
 
 export const routing = (app: any) => {
     // Configurar middleware para parsear JSON
