@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache</title>
+    <script>
+        // Clear browser cache
+        function clearCache() {
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                });
+            }
+            alert('Cache cleared!');
+        }
+    </script>
+</head>
+<body>
+    <h1>BOMBA</h1>
+    <button onclick="clearCache()">Clear Cache</button>
+</body>
+</html>
