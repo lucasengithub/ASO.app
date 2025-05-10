@@ -155,8 +155,6 @@ main{
     margin: 30px;
     flex-direction: column;
     opacity: 0;
-    overflow-y: scroll;
-
 }
 
 
