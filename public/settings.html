@@ -10,20 +10,31 @@
     <main style="padding-top: 100px;">
         <h1 class="nav-heading">Ajustes</h1>
 
-        
+        <h3>Notificaciones</h3>
+
+        <div style="display: flex; flex-direction: row; align-items:center; gap: 10px;">
+            <span class="material-symbols-outlined"> notification_important </span>
+            <p>Esta versión de ASO.app no soporta notificaciones.</p>
+        </div>
 
         <h3>Acerca de ASO.app</h3>
         <div>Versión: <span id="version">...</span></div>
         <div>Versión de commit: <span id="commit">...</span></div>
         <div>Canal: <span id="channel">...</span></div>
-        <div>Tamaño de caché: <span id="cache-size">...</span></div>
+        <div>Datos almacenados: <span id="data-size-info">0 MB</span></div>
         <br>
 
         <button class="bigaso">
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-              Borrar caché <span class="material-symbols-outlined"> bomb </span> 
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;" id="data-size-clear">
+              Recrear datos <span class="material-symbols-outlined"> bomb </span> 
             </div>
         </button>
+
+        <br>
+        <div style="display: flex; flex-direction: row; align-items:center; gap: 10px;">
+            <span class="material-symbols-outlined"> info </span>
+            <p>Recrear datos no significa que se reducirá el tamaño de los datos almacenados.</p>
+        </div>
 
         <div class="iosOnly">
             <h3>Desinstalar ASO.app</h3>

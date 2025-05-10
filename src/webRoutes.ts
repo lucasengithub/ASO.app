@@ -12,6 +12,13 @@ export const webRoutes = (webRT: express.Application) => {
     webRT.get('/aso.css', (req: Request, res: Response) => {
         res.sendFile(path.join(__dirname, '../public/aso.css'));
     });
+
+    webRT.get('/formula.js', (req: Request, res: Response) => {
+    // Establecer el encabezado Content-Type como HTML
+    res.setHeader('Content-Type', 'text/javascript');
+    res.sendFile(path.join(__dirname, '../public/formula.js'));
+});
+
     
     webRT.get('/links/', async (req: Request, res: Response) => {
         try {
@@ -77,9 +84,6 @@ webRT.get('/app', async (req: Request, res: Response) => {
 
 
 
-webRT.get('/formula.js', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../public/formula.js'));
-});
 
 webRT.get('/manifest.json', (req: Request, res: Response) => {
     res.send('{}')

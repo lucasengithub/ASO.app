@@ -783,6 +783,7 @@ textarea:focus{
 
     .bigaso{
         width: 100%;
+        cursor: pointer;
     }
     .notion-content{
         display: grid;

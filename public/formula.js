@@ -1,4 +1,4 @@
-// Register the Service Worker
+// Registrar Service Worker
 async function registerSW() {
     if ('serviceWorker' in navigator) {
         try {
@@ -9,9 +9,24 @@ async function registerSW() {
     }
 }
 
+if ('serviceWorker' in navigator) {
+    if (!navigator.serviceWorker.controller) {
+        registerSW(); // Register the service worker if not already registered
+    }
+}
 
 
-// backstage-salida
+
+
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    navigator.serviceWorker.controller.postMessage({ action: 'precache' });
+
+}
+
+
+
+
+// backstage-salida: (es un elemento de fondo que se usa en popups. Esto hace que si el usuario toca fuera del popup, se cierre)
 const backstage = document.querySelector('.backstage');
 if (backstage) {
     backstage.addEventListener('click', () => {
@@ -19,50 +34,56 @@ if (backstage) {
     });
 }
 
-// link en h3
+// cargar los títulos al js
+
+/// cuando hago referencia a h3x, es encabezado 3 (x) osea enlace. con h2x paso lo mismo. 
+
+
 const h3x = document.querySelectorAll('h3');
 const h2x = document.querySelectorAll('h2');
 
-h3x.forEach(h3 => {
-    const link = h3.querySelector('a'); // Verificar si hay un <a> dentro del <h3>
-    if (link) {
-        const destino = link.href; // Obtener el destino del enlace
-        const texto = h3.textContent.trim(); // Obtener el texto del <h3>
 
-        // Crear el nuevo elemento <a> que envuelve todo el <h3>
+
+// Remplazar en la app los titulos con enlace por botones
+
+
+h3x.forEach(h3 => {
+    const link = h3.querySelector('a'); 
+    if (link) {
+        const destino = link.href; 
+        const texto = h3.textContent.trim(); 
+    
+
+
         const newLink = document.createElement('a');
         newLink.href = destino;
         newLink.style.textDecoration = 'none';
         newLink.className = 'childpage';
         newLink.style.marginBottom = '20px';
 
-        // Abrir en nueva ventana si el enlace no empieza con el dominio actual
         const currentDomain = window.location.origin;
         if (!destino.startsWith(currentDomain)) {
             newLink.target = '_blank';
             newLink.rel = 'noopener noreferrer';
         }
 
-        // Añadir el ícono al final del contenido del enlace
+        // el vibe coding da más trabajo del que quita. úsalo bien, no como yo que tardo mas en arreglarlo que en hacerlo yo
         newLink.innerHTML = `${texto} <span class="material-symbols-outlined">north_east</span>`;
 
-        // Reemplazar el <h3> original con el nuevo <a>
         h3.replaceWith(newLink);
     }
 });
 
 h2x.forEach(h2 => {
-    const link = h2.querySelector('a'); // Verificar si hay un <a> dentro del <h2>
+    const link = h2.querySelector('a'); 
     if (link) {
-        const destino = link.href; // Obtener el destino del enlace
-        const texto = h2.textContent.trim(); // Obtener el texto del <h2>
+        const destino = link.href; 
+        const texto = h2.textContent.trim(); 
 
-        // Crear el nuevo elemento <a> con el formato especificado
         const newLink = document.createElement('a');
         newLink.href = destino;
         newLink.style.textDecoration = 'none';
 
-        // Abrir en nueva ventana si el enlace no empieza con el dominio actual
         const currentDomain = window.location.origin;
         if (!destino.startsWith(currentDomain)) {
             newLink.target = '_blank';
@@ -76,7 +97,6 @@ h2x.forEach(h2 => {
 
         newLink.appendChild(button);
 
-        // Reemplazar el <h2> original con el nuevo <a>
         h2.replaceWith(newLink);
     }
 });
