@@ -267,6 +267,19 @@ export const routing = (app: any) => {
             }
         });
     });
+
+    app.get('/bomba', (req: Request, res: Response) => {
+            fs.readFile(path.join(__dirname, '../public/bomba.html'), 'utf8', (err, data) => {
+                if (err) {
+                    res.status(500).send('Error reading file');
+                    return;
+                }
+                navGen(data, res);
+            }
+        );
+    });
+
+        
     
     app.post('/api/generate-pdf', generatePDF);
 }

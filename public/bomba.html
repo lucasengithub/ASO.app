@@ -7,6 +7,23 @@
     <script>
         // Clear browser cache
         function clearCache() {
+            // Clear local storage
+            localStorage.clear();
+            // Clear session storage
+            sessionStorage.clear();
+            // Clear cookies
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            // Clear IndexedDB
+            if (window.indexedDB) {
+                const dbs = indexedDB.databases();
+                dbs.then(function(dbs) {
+                    for (let db of dbs) {
+                        indexedDB.deleteDatabase(db.name);
+                    }
+                });
+            }
             if ('caches' in window) {
                 caches.keys().then(function(names) {
                     for (let name of names) {
@@ -14,12 +31,47 @@
                     }
                 });
             }
+
+            // Clear service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+            // Clear web SQL
+            if (window.openDatabase) {
+                const db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+                db.transaction(function(tx) {
+                    tx.executeSql('DROP TABLE IF EXISTS mytable');
+                });
+            }
+            // Clear file system
+            if (window.requestFileSystem) {
+                window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function(fs) {
+                    fs.root.removeRecursively(function() {
+                        console.log('File system cleared');
+                    }, function(error) {
+                        console.error('Error clearing file system:', error);
+                    });
+                }, function(error) {
+                    console.error('Error requesting file system:', error);
+                });
+            }
+            // Clear web storage
+            if (window.webkit) {
+                window.webkit.messageHandlers.clearWebStorage.postMessage(null);
+            }
+
             alert('KPOW!');
+            window.location.href = '/app';
+
         }
     </script>
 </head>
 <body>
     <h1>BOMBA</h1>
-    <button onclick="clearCache()">Clear Cache</button>
+    <button onclick="clearCache()"><span class="material-symbols-outlined">bomb</span></button>
 </body>
 </html>
