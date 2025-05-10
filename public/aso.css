@@ -155,6 +155,7 @@ main{
     margin: 30px;
     flex-direction: column;
     opacity: 0;
+    overflow-y: auto;
 }
 
 
@@ -616,7 +617,6 @@ textarea:focus{
     flex-direction: column;
     text-align: left;
     z-index: 601;
-    border-radius: 30px;
     padding: 20px;
     .simg{
         width: 80%;
