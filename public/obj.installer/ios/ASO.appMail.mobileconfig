@@ -10,9 +10,6 @@
 + ASO.app
 + Correo de EducaMadrid en la app de Mail
 
-
-Si quieres usar el correo o servicios bloqueados en la red de la ESD, instala WireGuard VPN desde AppStore.
-
 --------------------------
 Para eliminar, desinstala el perfil en Ajustes.
 
@@ -777,81 +774,6 @@ Si vas al extranjero o te conectas desde el extranjero (iCloud Relay), tu cuenta
 			<string>https://app.aadm.space/app</string>
 		</dict>
 		<dict>
-			<key>PayloadDisplayName</key>
-			<string>WireGuard VPN</string>
-			<key>PayloadIdentifier</key>
-			<string>com.apple.vpn.managed.44CDFE9F-4DC7-472A-956F-61C68055117C</string>
-			<key>PayloadType</key>
-			<string>com.apple.vpn.managed</string>
-			<key>PayloadUUID</key>
-			<string>44CDFE9F-4DC7-472A-956F-61C68055117C</string>
-			<key>PayloadVersion</key>
-			<integer>1</integer>
-			<key>UserDefinedName</key>
-			<string>ESDMADRID_WIFI sin límites.</string>
-			<key>VPNSubType</key>
-			<string>com.wireguard.ios</string>
-			<key>VPNType</key>
-			<string>VPN</string>
-			<key>VendorConfig</key>
-			<dict>
-				<key>WgQuickConfig</key>
-				<string>
-		[Interface]
-		PrivateKey = UPVXWhONlkhGFUSgNVN/OsAWikTCrTF5WAWYc7RNuGw=
-		Address = 172.16.0.2/32, 2606:4700:110:8727:2620:49e2:6385:a6cb/128
-		DNS = 1.1.1.1, 1.0.0.1, 2606:4700:4700::1111, 2606:4700:4700::1001
-		MTU = 1280
-
-		[Peer]
-		PublicKey = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
-		AllowedIPs = 0.0.0.0/0, ::/0
-		Endpoint = engage.cloudflareclient.com:2408
-				</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>AutoJoin</key>
-			<true/>
-			<key>CaptiveBypass</key>
-			<false/>
-			<key>DisableAssociationMACRandomization</key>
-			<true/>
-			<key>EncryptionType</key>
-			<string>WPA</string>
-			<key>HIDDEN_NETWORK</key>
-			<false/>
-			<key>IsHotspot</key>
-			<false/>
-			<key>Password</key>
-			<string>ESDMadrid2019</string>
-			<key>PayloadDescription</key>
-			<string>Configura los ajustes de Wi-Fi</string>
-			<key>PayloadDisplayName</key>
-			<string>Wi-Fi</string>
-			<key>PayloadIdentifier</key>
-			<string>com.apple.wifi.managed.3A8DD607-8D77-41AC-A8ED-74B0F117BCA5</string>
-			<key>PayloadType</key>
-			<string>com.apple.wifi.managed</string>
-			<key>PayloadUUID</key>
-			<string>3A8DD607-8D77-41AC-A8ED-74B0F117BCA5</string>
-			<key>PayloadVersion</key>
-			<integer>1</integer>
-			<key>ProxyType</key>
-			<string>None</string>
-			<key>QoSMarkingPolicy</key>
-			<dict>
-				<key>QoSMarkingAppleAudioVideoCalls</key>
-				<true/>
-				<key>QoSMarkingEnabled</key>
-				<false/>
-				<key>QoSMarkingWhitelistedAppIdentifiers</key>
-				<array/>
-			</dict>
-			<key>SSID_STR</key>
-			<string>ESDMADRID_WIFI</string>
-		</dict>
-		<dict>
 			<key>EmailAccountDescription</key>
 			<string>ESD Madrid</string>
 			<key>EmailAccountName</key>
@@ -887,11 +809,11 @@ Si vas al extranjero o te conectas desde el extranjero (iCloud Relay), tu cuenta
 			<key>PayloadDisplayName</key>
 			<string>ESD Madrid</string>
 			<key>PayloadIdentifier</key>
-			<string>com.apple.mail.managed.E955A3A4-0622-4BE4-8B48-2396112754E6</string>
+			<string>com.apple.mail.managed.67D7F302-3ACB-4C9F-BFA0-6C2CCEB75A15</string>
 			<key>PayloadType</key>
 			<string>com.apple.mail.managed</string>
 			<key>PayloadUUID</key>
-			<string>E955A3A4-0622-4BE4-8B48-2396112754E6</string>
+			<string>67D7F302-3ACB-4C9F-BFA0-6C2CCEB75A15</string>
 			<key>PayloadVersion</key>
 			<integer>1</integer>
 			<key>PreventAppSheet</key>
@@ -909,6 +831,67 @@ Si vas al extranjero o te conectas desde el extranjero (iCloud Relay), tu cuenta
 			<key>disableMailRecentsSyncing</key>
 			<false/>
 		</dict>
+		<dict>
+			<key>AutoJoin</key>
+			<true/>
+			<key>CaptiveBypass</key>
+			<false/>
+			<key>DisableAssociationMACRandomization</key>
+			<true/>
+			<key>EncryptionType</key>
+			<string>WPA</string>
+			<key>HIDDEN_NETWORK</key>
+			<false/>
+			<key>IsHotspot</key>
+			<false/>
+			<key>Password</key>
+			<string>ESDMadrid2019</string>
+			<key>PayloadDescription</key>
+			<string>Configura los ajustes de Wi-Fi</string>
+			<key>PayloadDisplayName</key>
+			<string>Wi-Fi</string>
+			<key>PayloadIdentifier</key>
+			<string>com.apple.wifi.managed.257D75D8-EAF2-4381-9637-47541F82248C</string>
+			<key>PayloadType</key>
+			<string>com.apple.wifi.managed</string>
+			<key>PayloadUUID</key>
+			<string>257D75D8-EAF2-4381-9637-47541F82248C</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>ProxyType</key>
+			<string>None</string>
+			<key>QoSMarkingPolicy</key>
+			<dict>
+				<key>QoSMarkingAppleAudioVideoCalls</key>
+				<true/>
+				<key>QoSMarkingEnabled</key>
+				<true/>
+				<key>QoSMarkingWhitelistedAppIdentifiers</key>
+				<array/>
+			</dict>
+			<key>SSID_STR</key>
+			<string>ESDMADRID_WIFI</string>
+		</dict>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	</array>
 	<key>PayloadDescription</key>
 	<string>ASO.app es la App de la AADM para no perderte nada.
@@ -926,7 +909,7 @@ Si vas al extranjero o te conectas desde el extranjero (iCloud Relay), tu cuenta
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
-	<string>2E6C9641-6100-4412-BB1C-892AA7D6DE59</string>
+	<string>F5C16247-14F1-465A-9807-E0E728A50346</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
 </dict>
