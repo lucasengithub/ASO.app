@@ -30,7 +30,7 @@ export const webRoutes = (webRT: express.Application) => {
 
             const itemsHtml = items.map(item => {  
                 const { pageId, name } = item;
-                return '<li class="item"><a href="/' + pageId + '" class="itemLink">' + name + '</a></li>';
+                return '<li class="item"><a href="/id/' + pageId + '" class="itemLink">' + name + '</a></li>';
             }).join('\n');
 
             // Inyecta el contenido de notion
@@ -80,10 +80,19 @@ webRT.get('/actividades', async (req: Request, res: Response) => {
             const opcionesFecha: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
             const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha);
 
+            // *** Nuevo: generar ID en formato DDMMYYYY ***
+            const dd   = String(fecha.getDate()).padStart(2, '0');
+            const mm   = String(fecha.getMonth() + 1).padStart(2, '0');
+            const yyyy = fecha.getFullYear();
+            const idFecha = `${dd}${mm}${yyyy}`;
+
+            // Inyectar el id en el h3
+            const fechaHtml = fecha
+              ? `<h3 id="${idFecha}" class="actividad-date">${fechaFormateada}</h3>`
+              : '';
+
             // Determinar la clase del botón
             const claseBoton = destino === "#" ? "outlined" : "";
-
-            const fechaHtml = fecha ? `<h3 class="actividad-date">${fechaFormateada}</h3>` : '';
 
             const infoHtml =  
             '<h1>' + name + '</h1>' + 

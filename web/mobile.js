@@ -27,3 +27,16 @@ boton.addEventListener('click', () => {
   }
 });
 
+
+
+
+function scrollWithOffset() {
+        const hash = window.location.hash.slice(1);
+        if (!hash) return;
+        const el = document.getElementById(hash);
+        if (!el) return;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 100;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+      window.addEventListener('load',  scrollWithOffset);
+      window.addEventListener('hashchange', scrollWithOffset);
