@@ -358,6 +358,10 @@ button{
     border: 0;
     width: 200px;
     cursor: pointer;
+    font-family: NeueMontreal, sans-serif;
+    font-size: 14px;
+    transition: all 0.1s;
+    font-weight: 500;
 
 }
 
@@ -526,8 +530,39 @@ textarea:focus{
     display: none;
 }
 
+
+.col {
+    display: flex;
+    flex-direction: row; /* Por defecto, ajusta según necesites (row o column) */
+    gap: 20px; /* Espacio entre la columna de texto y la de imagen */
+    width: 100%;
+    align-items: flex-start; /* Alinea los items al inicio */
+}
+
+/* Reglas desanidadas para .col0 y .col1 */
+.col > .col0 { /* O puedes usar '.col .col0' */
+    flex: 2; /* La columna de texto ocupa más espacio */
+    display: flex;
+    flex-direction: column;
+}
+
+.col > .col1 { /* O puedes usar '.col .col1' */
+    flex: 1; /* La columna de imagen ocupa menos espacio */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 /** Clases **/
 
+    .actividad-image {
+    width: 100%;
+    max-width: 300px; /* Ajusta el tamaño máximo de la imagen */
+    height: auto;
+    object-fit: cover;
+    }
+    
 .center{
     display: flex;
     justify-content: center;
@@ -854,4 +889,16 @@ textarea:focus{
         display: none;
     }
     
+}
+
+@media screen and (max-width: 600px) {
+  .col {
+    flex-direction: column-reverse; /* invierte el orden */
+    gap: 20px;
+  }
+  .col > .col0,
+  .col > .col1 {
+    width: 100%;
+    float: none;
+  }
 }

@@ -23,6 +23,10 @@ if (!process.env.WEB_DATABASE_ID) {
     throw new Error('WEB_DATABASE_ID is not defined in environment variables');
 }
 
+if (!process.env.ACTIVIDADES_DATABASE_ID) {
+    throw new Error('ACTIVIDADES_DATABASE_ID is not defined in environment variables');
+}
+
 const notion = new Client({
     auth: process.env.NOTION_KEY
 });
@@ -32,6 +36,16 @@ export interface AADMItem {
     destino?: string;
     pageId?: string;
     icono?: string;
+}
+
+export interface ActividadItem {
+    name: string;
+    destino?: string;
+    pageId?: string;
+    imagen?: string;
+    descripcion?: string;
+    fecha: Date; 
+    textoboton?: string;
 }
 
 export async function getAADMItems(): Promise<AADMItem[]> {
@@ -50,7 +64,7 @@ export async function getAADMItems(): Promise<AADMItem[]> {
             
             return {
                 name: nombreProp.title[0]?.plain_text || '',
-                destino: destinoProp.url || undefined,
+                destino: destinoProp.url || "#",
                 pageId: destinoProp.url ? undefined : page.id,
                 icono: iconoProp?.rich_text?.map(t => t.plain_text).join('') || '',
             };
@@ -107,9 +121,49 @@ export async function getHomeItems(): Promise<AADMItem[]> {
                 pageId: destinoProp.url ? undefined : page.id
             };
         });
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Error fetching Home items:', error);
+        return [];
+    }
+}
+
+export async function getActividadesItems(): Promise<ActividadItem[]> {
+    try {
+        const response = await notion.databases.query({
+            database_id: process.env.ACTIVIDADES_DATABASE_ID!,
+            sorts: [ 
+                {
+                    property: 'Fecha',
+                    direction: 'descending',
+                },
+            ],
+        });
+        return response.results.map((page) => {
+            const p = page as PageObjectResponse;
+            const properties = p.properties;
+            const nombreProp = properties['Título'] as { type: 'title'; title: Array<{ plain_text: string }> };
+            const destinoProp = properties['Link'] as { type: 'url'; url: string | null };
+            // Cambiar el tipo esperado para la propiedad de imagen a 'url'
+            const imagenProp = properties['Imagen'] as { type: 'url'; url: string | null };
+            const descripcionProp = properties['Descripción'] as { type: 'rich_text'; rich_text: Array<{ plain_text: string }> };
+            const fechaProp = properties['Fecha'] as { type: 'date'; date: { start: string } | null };
+            const textobotonProp = properties['Botón'] as { type: 'rich_text'; rich_text: Array<{ plain_text: string }> };
+            
+            // Obtener la URL de la imagen directamente de la propiedad 'url' de forma segura
+            const imagenUrl = imagenProp ? imagenProp.url || '' : '';
+            
+            return {
+                name: nombreProp.title[0]?.plain_text || '',
+                destino: destinoProp.url || "#",
+                pageId: destinoProp.url ? undefined : page.id,
+                imagen: imagenUrl, 
+                descripcion: descripcionProp.rich_text.map(t => t.plain_text).join('') || '',
+                fecha: fechaProp.date?.start ? new Date(fechaProp.date.start) : new Date(0), 
+                textoboton: textobotonProp.rich_text.map(t => t.plain_text).join('') || ''
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching Actividades items:', error);
         return [];
     }
 }
