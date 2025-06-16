@@ -51,7 +51,7 @@ webRT.get('/', (req: Request, res: Response) => {
     const inicioPath = path.join(__dirname, '../web/inicio.html');
     const pageData = {
         content: fs.readFileSync(inicioPath, 'utf8'),    };
-    const pageTitle = 'Inicio - asociación de alumnos de diseño de madrid';
+    const pageTitle = 'Portada de la asociación de alumnos de diseño de madrid';
     const content = fs.readFileSync(path.join(__dirname, '../web/index.html'), 'utf8');
     const modifiedContent = content
         .replace(
@@ -69,9 +69,18 @@ webRT.get('/', (req: Request, res: Response) => {
 webRT.get('/actividades', async (req: Request, res: Response) => {
     try {
         const items: ActividadItem[] = await getActividadesItems(); 
+        const pageTitle = 'Actividades | aadm';
+        
+
         const indexPath = path.join(__dirname, '../web/index.html');
 
+
         let modData = await fs.promises.readFile(indexPath, 'utf8');
+
+        modData = modData.replace(
+            '<title>AADM</title>',
+            `<title>${pageTitle}</title>`
+        );
 
         const itemsHtml = items.map(item => {  
             const { name, descripcion, textoboton, fecha, imagen, destino } = item; 
@@ -108,12 +117,10 @@ webRT.get('/actividades', async (req: Request, res: Response) => {
                     </div>`;
         }
         ).map(itemHtml => {
-            // La clase actividad-item se puede mover al contenedor col o mantenerla si tiene estilos específicos
             return `<div class="actividad-item">${itemHtml}</div>`; 
 
         }).join('\n');
 
-        // Inyecta el contenido de notion
         modData = modData.replace(
             '<main>Error Desconocido</main>',
             `<main><div class=notion-page><h1 class="hTitle">Actividades</h1><br>${itemsHtml}</div></main>`
@@ -193,8 +200,14 @@ webRT.get('/app', async (req: Request, res: Response) => {
 
 
 webRT.get('/manifest.json', (req: Request, res: Response) => {
-    res.send('{}')
+    res.sendFile(path.join(__dirname, '../public/manifest.json'));
 });
+
+webRT.use('/serviceworker.js', (req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, '../public/serviceworker.js'));
+});
+
 
 webRT.use('/formula.js', express.static(path.join(__dirname, '../public/formula.js')));
 webRT.use('/icons/material-symbols', express.static(path.join(__dirname, '../public/icons/material-symbols')));

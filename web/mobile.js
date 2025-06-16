@@ -1,6 +1,7 @@
 const boton = document.getElementById('menumob');
 const mobileNav = document.getElementById('mobile-nav');
 const header = document.querySelector('header');
+const links = document.getElementById('mobile-nav-links')
 
 
 boton.addEventListener('click', () => {
@@ -12,7 +13,6 @@ boton.addEventListener('click', () => {
     boton.classList.remove('rotated');
     header.style.backdropFilter = 'blur(12px)';
     header.style.backgroundColor = 'rgba(253, 253, 253, 0.462)';
-    // tras la animación ocultar para que no capture eventos
     setTimeout(() => mobileNav.style.display = 'none', 300);
     boton.innerText = 'menu';
   } else {
@@ -26,8 +26,6 @@ boton.addEventListener('click', () => {
     boton.innerText = 'close';
   }
 });
-
-
 
 
 function scrollWithOffset() {

@@ -97,14 +97,13 @@ footer{
     padding: 0px 20px;
     align-items: baseline;
     width: calc(100% - 40px);
-    color: #FDFDFD;
     font-family: NeueMontreal, sans-serif;
     font-size: 1.2em;
-    border-top: 1px solid #36e452;
-    height: 300px;
+    background-color: #f2f2f2;
+    position: relative;
+    bottom: 0;
 
     a{
-        text-decoration: none;
         color: #040406;
         font-family: NeueMontreal, sans-serif;
         transition: linear 0.1s;
@@ -166,14 +165,12 @@ form{
     justify-content: center;
     background-color: #fdfdfd85;
     backdrop-filter: blur(10px);
-    transform: scale(0.8);
     opacity: 0;
-    transition: transform 0.5s ease, opacity 0.4s ease;
+    transition:  opacity 0.4s ease;
 }
 
 #mobile-nav.open {
     display: flex;
-    transform: scale(1);
     opacity: 1;
 }
 
@@ -183,7 +180,11 @@ form{
     align-items: center;
     gap: 30px; /* Más espacio para pantalla completa */
     text-align: center;
+    transform: scale(0.8); 
+    transform: 0.5s ease;
+
 }
+
 
 .mobile-nav-links a {
     text-decoration: none;
@@ -234,6 +235,11 @@ form{
     }
     .desktop-nav {
         display: none;
+    }
+    form{
+        button{
+            width: 100%;
+    }
     }
     
     
