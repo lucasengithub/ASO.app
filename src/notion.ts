@@ -64,13 +64,13 @@ export async function getAADMItems(): Promise<AADMItem[]> {
             
             return {
                 name: nombreProp.title[0]?.plain_text || '',
-                destino: destinoProp.url || "#",
+                destino: destinoProp.url || undefined,
                 pageId: destinoProp.url ? undefined : page.id,
                 icono: iconoProp?.rich_text?.map(t => t.plain_text).join('') || '',
             };
         });
     } catch (error) {
-        console.error('Error fetching AADM items:', error);
+        console.error('Error fetching Escuela items:', error);
         return [];
     }
 }

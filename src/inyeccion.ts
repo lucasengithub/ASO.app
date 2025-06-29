@@ -34,7 +34,17 @@ export const navGen = (content: string | string[], res: Response) => {
                 src: url('/icons/material-symbols/material-symbols-outlined.woff2') format('woff2');
               }
             </style>
-            </head>\n <div id="bCursor"> </div>`
+            </head>\n <div id="bCursor"> </div> \n
+            <!-- Google tag (gtag.js) -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-4BDXW4TRWE"></script>
+            <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-4BDXW4TRWE');
+            </script>
+            `
         )
         .replace(
             '</html>',

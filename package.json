@@ -1,6 +1,6 @@
 {
   "name": "aso.app",
-  "version": "1.2.0b",
+  "version": "1.2.1",
   "description": "AsoAPP",
   "main": "dist/index.js",
   "scripts": {
