@@ -96,38 +96,116 @@ function isPWAInstalled() {
            document.referrer.includes('android-app://');
 }
 
+// Función para mostrar notificación en iOS
+function showIOSNotificationPrompt() {
+    alert('Para activar las notificaciones en iOS:\n\n1. Ve a Configuración\n2. Busca "ASO.app"\n3. Activa "Permitir notificaciones"');
+}
+
 // Función para verificar el estado de las notificaciones
 function checkNotificationStatus() {
-    // Solo mostrar el banner si:
-    // 1. La app está instalada como PWA
-    // 2. Las notificaciones no están activadas (denegadas o por defecto)
-    if (isPWAInstalled() && 
-        ('Notification' in window) && 
-        (Notification.permission === 'default' || Notification.permission === 'denied')) {
-        
-        const notifyAlert = document.getElementById('notifyalert');
-        if (notifyAlert) {
-            // Actualizar el contenido del banner con el enlace correcto
-            notifyAlert.innerHTML = `
-                <section class="sp_notify_prompt" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                    <p style="margin-right: 32px;">Activa las notificaciones</p>
-                    <span class="material-symbols-outlined" style="margin-left: 32px;">notifications</span>
-                </section>
-            `;
-            notifyAlert.style.display = 'flex';
+    try {
+        // Solo mostrar el banner si:
+        // 1. La app está instalada como PWA
+        // 2. Las notificaciones no están activadas (denegadas o por defecto)
+        if (isPWAInstalled() && 
+            ('Notification' in window) && 
+            (Notification.permission === 'default' || Notification.permission === 'denied')) {
+            
+            const notifyAlert = document.getElementById('notifyalert');
+            if (notifyAlert) {
+                // Detectar si es iOS
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                
+                if (isIOS) {
+                    // En iOS, mostrar instrucciones específicas
+                    notifyAlert.innerHTML = `
+                        <div onclick="showIOSNotificationPrompt()" style="display: flex; align-items: center; justify-content: space-between; width: 100%; cursor: pointer;">
+                            <p style="margin-right: 32px;">Activa las notificaciones</p>
+                            <span class="material-symbols-outlined" style="margin-left: 32px;">notifications</span>
+                        </div>
+                    `;
+                } else {
+                    // En otros navegadores, usar el sistema de webpush
+                    notifyAlert.innerHTML = `
+                        <div class="sp_notify_prompt" style="display: flex; align-items: center; justify-content: space-between; width: 100%; cursor: pointer;">
+                            <p style="margin-right: 32px;">Activa las notificaciones</p>
+                            <span class="material-symbols-outlined" style="margin-left: 32px;">notifications</span>
+                        </div>
+                    `;
+                }
+                notifyAlert.style.display = 'flex';
+            }
         }
+    } catch (error) {
+        console.error('Error en checkNotificationStatus:', error);
+        alert('Error al verificar el estado de las notificaciones: ' + error.message);
+    }
+}
+
+// Función para manejar la solicitud de notificaciones
+function requestNotificationPermission() {
+    try {
+        if ('Notification' in window) {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === 'granted') {
+                    // Ocultar el banner si se conceden los permisos
+                    const notifyAlert = document.getElementById('notifyalert');
+                    if (notifyAlert) {
+                        notifyAlert.style.display = 'none';
+                    }
+                    alert('¡Notificaciones activadas correctamente!');
+                } else if (permission === 'denied') {
+                    alert('Las notificaciones han sido denegadas. Puedes activarlas desde la configuración del navegador.');
+                }
+            }).catch(function(error) {
+                console.error('Error al solicitar permisos de notificación:', error);
+                alert('Error al solicitar permisos de notificación: ' + error.message);
+            });
+        } else {
+            alert('Este navegador no soporta notificaciones push.');
+        }
+    } catch (error) {
+        console.error('Error en requestNotificationPermission:', error);
+        alert('Error al procesar la solicitud de notificaciones: ' + error.message);
     }
 }
 
 // Ejecutar la verificación cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
-    checkNotificationStatus();
+    try {
+        checkNotificationStatus();
+    } catch (error) {
+        console.error('Error al cargar:', error);
+        alert('Error al inicializar la aplicación: ' + error.message);
+    }
 });
 
 // También verificar cuando cambia el estado de la pantalla (por si instalan la PWA)
 window.addEventListener('appinstalled', function() {
-    setTimeout(checkNotificationStatus, 1000);
+    try {
+        setTimeout(checkNotificationStatus, 1000);
+    } catch (error) {
+        console.error('Error después de instalar:', error);
+        alert('Error después de la instalación: ' + error.message);
+    }
 });
+
+// Verificar cambios en los permisos de notificación
+if ('permissions' in navigator) {
+    navigator.permissions.query({name: 'notifications'}).then(function(permissionStatus) {
+        permissionStatus.onchange = function() {
+            try {
+                checkNotificationStatus();
+            } catch (error) {
+                console.error('Error al cambiar permisos:', error);
+                alert('Error al verificar cambios de permisos: ' + error.message);
+            }
+        };
+    }).catch(function(error) {
+        console.error('Error al consultar permisos:', error);
+    });
+}
 </script>
 
 </html>
