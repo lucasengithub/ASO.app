@@ -87,5 +87,47 @@
 
 </body>
 
+<script>
+// Función para verificar si la app está instalada como PWA
+function isPWAInstalled() {
+    // Verifica si la app se está ejecutando en modo standalone
+    return window.matchMedia('(display-mode: standalone)').matches || 
+           window.navigator.standalone === true ||
+           document.referrer.includes('android-app://');
+}
+
+// Función para verificar el estado de las notificaciones
+function checkNotificationStatus() {
+    // Solo mostrar el banner si:
+    // 1. La app está instalada como PWA
+    // 2. Las notificaciones no están activadas (denegadas o por defecto)
+    if (isPWAInstalled() && 
+        ('Notification' in window) && 
+        (Notification.permission === 'default' || Notification.permission === 'denied')) {
+        
+        const notifyAlert = document.getElementById('notifyalert');
+        if (notifyAlert) {
+            // Actualizar el contenido del banner con el enlace correcto
+            notifyAlert.innerHTML = `
+                <p>Activa las notificaciones.</p>
+                <a href="#" class="sp_notify_prompt" style="color: inherit; text-decoration: none;">
+                    <span class="material-symbols-outlined">notifications</span>
+                </a>
+            `;
+            notifyAlert.style.display = 'flex';
+        }
+    }
+}
+
+// Ejecutar la verificación cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    checkNotificationStatus();
+});
+
+// También verificar cuando cambia el estado de la pantalla (por si instalan la PWA)
+window.addEventListener('appinstalled', function() {
+    setTimeout(checkNotificationStatus, 1000);
+});
+</script>
 
 </html>

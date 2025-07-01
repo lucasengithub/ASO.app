@@ -13,9 +13,14 @@
 
         <h3>Notificaciones</h3>
 
+        <button class="bigaso" id="notification-service">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;" class="sp_notify_prompt">
+                Registrar notificaciones <span class="material-symbols-outlined"> notifications </span>
+            </div>
+        </button>
         <div style="display: flex; flex-direction: row; align-items:center; gap: 10px;">
             <span class="material-symbols-outlined"> info </span>
-            <p>El sistema gestiona las notificaciones. Para recrear los datos y volver a registrar el servicio de notificaciones haz click <a id="data-size-clear">aquí</a>.</p>
+            <p>El sistema gestiona las notificaciones. Para recrear los datos y volver a registrar el servicio de notificaciones haz click en recrear datos.</p>
         </div>
 
         <h3>Acerca de ASO.app</h3>
@@ -25,7 +30,15 @@
         <div>Datos almacenados: <span id="data-size-info">0 MB</span></div>
         <br>
 
-
+        <button class="bigaso">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;" id="data-size-clear">
+              Recrear datos <span class="material-symbols-outlined"> bomb </span> 
+            </div>
+        </button>
+        <div style="display: flex; flex-direction: row; align-items:center; gap: 10px;">
+            <span class="material-symbols-outlined"> info </span>
+            <p>Recrear datos no significa que se reducirá el tamaño de los datos almacenados.</p>
+        </div>
 
         <div class="iosOnly">
             <h3>Desinstalar ASO.app</h3>
