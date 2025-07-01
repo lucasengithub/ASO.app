@@ -109,10 +109,12 @@ function checkNotificationStatus() {
         if (notifyAlert) {
             // Actualizar el contenido del banner con el enlace correcto
             notifyAlert.innerHTML = `
+                <section class="sp_notify_prompt">
                 <p>Activa las notificaciones.</p>
-                <a href="#" class="sp_notify_prompt" style="color: inherit; text-decoration: none;">
+                <a  style="color: inherit; text-decoration: none;">
                     <span class="material-symbols-outlined">notifications</span>
                 </a>
+                </section>
             `;
             notifyAlert.style.display = 'flex';
         }
