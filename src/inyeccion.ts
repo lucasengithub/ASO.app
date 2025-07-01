@@ -34,6 +34,7 @@ export const navGen = (content: string | string[], res: Response) => {
                 src: url('/icons/material-symbols/material-symbols-outlined.woff2') format('woff2');
               }
             </style>
+            <script charset="UTF-8" src="//web.webpushs.com/js/push/56ee0312917f6303e03a331e0e78b2d9_1.js" async></script>
             </head>\n <div id="bCursor"> </div> `
         )
         .replace(
