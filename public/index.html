@@ -96,43 +96,96 @@ function isPWAInstalled() {
            document.referrer.includes('android-app://');
 }
 
-// Función para mostrar notificación en iOS
-function showIOSNotificationPrompt() {
-    alert('Para activar las notificaciones en iOS:\n\n1. Ve a Configuración\n2. Busca "ASO.app"\n3. Activa "Permitir notificaciones"');
+// Función para detectar iOS
+function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+// Función para verificar si las notificaciones están soportadas
+function areNotificationsSupported() {
+    if (!('Notification' in window)) {
+        return { supported: false, reason: 'Este navegador no soporta notificaciones web.' };
+    }
+    
+    if (!('serviceWorker' in navigator)) {
+        return { supported: false, reason: 'Este navegador no soporta Service Workers.' };
+    }
+    
+    // Verificar versión de iOS si es necesario
+    if (isIOS()) {
+        const iosVersion = parseFloat(
+            ('' + (/CPU.*OS ([0-9_]{3,4})[0-9_]{0,1}|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1])
+            .replace('undefined', '3_2').replace('_', '.').replace('_', '')
+        ) || false;
+        
+        if (iosVersion && iosVersion < 16.4) {
+            return { supported: false, reason: 'Las notificaciones web requieren iOS 16.4 o superior.' };
+        }
+    }
+    
+    return { supported: true };
+}
+
+// Función para mostrar información específica de iOS
+function showIOSNotificationInfo() {
+    const support = areNotificationsSupported();
+    if (!support.supported) {
+        alert(support.reason);
+        return;
+    }
+    
+    if (Notification.permission === 'denied') {
+        alert('Las notificaciones están bloqueadas.\n\nPara activarlas:\n1. Ve a Configuración de iOS\n2. Busca Safari o tu navegador\n3. Ve a Sitios web\n4. Busca esta app y activa las notificaciones');
+    } else {
+        requestNotificationPermission();
+    }
 }
 
 // Función para verificar el estado de las notificaciones
 function checkNotificationStatus() {
     try {
-        // Solo mostrar el banner si:
-        // 1. La app está instalada como PWA
-        // 2. Las notificaciones no están activadas (denegadas o por defecto)
-        if (isPWAInstalled() && 
-            ('Notification' in window) && 
-            (Notification.permission === 'default' || Notification.permission === 'denied')) {
-            
+        // Solo mostrar el banner si la app está instalada como PWA
+        if (!isPWAInstalled()) {
+            return;
+        }
+
+        const support = areNotificationsSupported();
+        if (!support.supported) {
+            // No mostrar banner si no están soportadas
+            return;
+        }
+
+        // Mostrar banner solo si las notificaciones no están activadas
+        if (Notification.permission === 'default' || Notification.permission === 'denied') {
             const notifyAlert = document.getElementById('notifyalert');
             if (notifyAlert) {
-                // Detectar si es iOS
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-                
-                if (isIOS) {
-                    // En iOS, mostrar instrucciones específicas
+                if (isIOS()) {
+                    // En iOS, usar función específica
                     notifyAlert.innerHTML = `
-                        <div onclick="showIOSNotificationPrompt()" style="display: flex; align-items: center; justify-content: space-between; width: 100%; cursor: pointer;">
+                        <div onclick="showIOSNotificationInfo()" style="display: flex; align-items: center; justify-content: space-between; width: 100%; cursor: pointer;">
                             <p style="margin-right: 32px;">Activa las notificaciones</p>
                             <span class="material-symbols-outlined" style="margin-left: 32px;">notifications</span>
                         </div>
                     `;
                 } else {
-                    // En otros navegadores, usar el sistema de webpush
+                    // En otros navegadores, intentar usar el sistema de webpush
                     notifyAlert.innerHTML = `
                         <div class="sp_notify_prompt" style="display: flex; align-items: center; justify-content: space-between; width: 100%; cursor: pointer;">
                             <p style="margin-right: 32px;">Activa las notificaciones</p>
                             <span class="material-symbols-outlined" style="margin-left: 32px;">notifications</span>
                         </div>
                     `;
+                    
+                    // Fallback si sp_notify_prompt no funciona
+                    setTimeout(() => {
+                        const spElement = notifyAlert.querySelector('.sp_notify_prompt');
+                        if (spElement && !spElement.hasAttribute('data-sp-initialized')) {
+                            spElement.onclick = function() {
+                                requestNotificationPermission();
+                            };
+                        }
+                    }, 1000);
                 }
                 notifyAlert.style.display = 'flex';
             }
@@ -146,25 +199,40 @@ function checkNotificationStatus() {
 // Función para manejar la solicitud de notificaciones
 function requestNotificationPermission() {
     try {
-        if ('Notification' in window) {
-            Notification.requestPermission().then(function(permission) {
-                if (permission === 'granted') {
-                    // Ocultar el banner si se conceden los permisos
-                    const notifyAlert = document.getElementById('notifyalert');
-                    if (notifyAlert) {
-                        notifyAlert.style.display = 'none';
-                    }
-                    alert('¡Notificaciones activadas correctamente!');
-                } else if (permission === 'denied') {
-                    alert('Las notificaciones han sido denegadas. Puedes activarlas desde la configuración del navegador.');
-                }
-            }).catch(function(error) {
-                console.error('Error al solicitar permisos de notificación:', error);
-                alert('Error al solicitar permisos de notificación: ' + error.message);
-            });
-        } else {
-            alert('Este navegador no soporta notificaciones push.');
+        const support = areNotificationsSupported();
+        if (!support.supported) {
+            alert(support.reason);
+            return;
         }
+
+        Notification.requestPermission().then(function(permission) {
+            if (permission === 'granted') {
+                // Ocultar el banner si se conceden los permisos
+                const notifyAlert = document.getElementById('notifyalert');
+                if (notifyAlert) {
+                    notifyAlert.style.display = 'none';
+                }
+                alert('¡Notificaciones activadas correctamente!');
+                
+                // Registrar service worker si no está registrado
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sp-push-worker-fb.js')
+                        .then(() => console.log('Service Worker registrado'))
+                        .catch(err => console.error('Error registrando Service Worker:', err));
+                }
+            } else if (permission === 'denied') {
+                if (isIOS()) {
+                    alert('Las notificaciones han sido denegadas.\n\nPara activarlas:\n1. Ve a Configuración de iOS\n2. Busca Safari\n3. Ve a Sitios web\n4. Busca esta app y activa las notificaciones');
+                } else {
+                    alert('Las notificaciones han sido denegadas.\n\nPuedes activarlas desde:\n- El icono de candado en la barra de direcciones\n- Configuración del navegador > Permisos');
+                }
+            } else {
+                alert('No se pudo determinar el estado de las notificaciones. Inténtalo de nuevo.');
+            }
+        }).catch(function(error) {
+            console.error('Error al solicitar permisos de notificación:', error);
+            alert('Error al solicitar permisos de notificación: ' + error.message + '\n\nAsegúrate de que estás usando una conexión HTTPS y un navegador compatible.');
+        });
     } catch (error) {
         console.error('Error en requestNotificationPermission:', error);
         alert('Error al procesar la solicitud de notificaciones: ' + error.message);
