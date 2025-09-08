@@ -126,6 +126,7 @@
 * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
+    user-select: none;
     -webkit-tap-highlight-color: transparent;
     font-size: 16px;
     color: #040406;
@@ -190,6 +191,7 @@ a {
     transition: linear 0.1s;
     text-decoration: underline;
     -webkit-touch-callout: none;
+    user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     pointer-events: auto;
@@ -775,39 +777,10 @@ textarea:focus{
 /* Adaptación a pantallas */
 
 @media screen and (min-width: 600px){
-    html{
-        cursor: none;
-    }
-    
-    a{
-        cursor: none;
-    }
-    
+
     #bCursor{
         display: block;
     }
-
-    textarea{
-        cursor: none;
-
-    }
-    
-    input{
-        cursor: none;
-    }
-
-    button{
-        cursor: none;
-    }
-
-    label{
-        cursor: none;
-    }
-
-    form{
-        cursor: none;
-    }
-
 
 
     .popup{

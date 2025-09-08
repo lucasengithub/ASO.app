@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { barData, cursorData, helloC, preventBack, topData } from './navbar'
+import { barData, helloC, preventBack, topData } from './navbar'
 
 export const navGen = (content: string | string[], res: Response) => {
     let data = typeof content === 'string' ? content : content.join('');
@@ -34,13 +34,12 @@ export const navGen = (content: string | string[], res: Response) => {
                 src: url('/icons/material-symbols/material-symbols-outlined.woff2') format('woff2');
               }
             </style>
-            <script charset="UTF-8" src="//web.webpushs.com/js/push/56ee0312917f6303e03a331e0e78b2d9_1.js" async></script>
             </head>\n <div id="bCursor"> </div> `
         )
         .replace(
             '</html>',
-            `<script defer>${helloC}</script>
-            <script defer>${cursorData}</script>
+            `<!-- start webpushr code --> <script>(function(w,d, s, id) {if(typeof(w.webpushr)!=='undefined') return;w.webpushr=w.webpushr||function(){(w.webpushr.q=w.webpushr.q||[]).push(arguments)};var js, fjs = d.getElementsByTagName(s)[0];js = d.createElement(s); js.id = id;js.async=1;js.src = "https://cdn.webpushr.com/app.min.js";fjs.parentNode.appendChild(js);}(window,document, 'script', 'webpushr-jssdk'));webpushr('setup',{'key':'BB77e-1LauvWNJsKBDUTpVERE4I6vRJeEFVBhRNY0RS0E01jvUvzIYqq0jzCfNRM0ZueehtU7gTWk9_PkIPXRoI' });</script><!-- end webpushr code -->
+            <script defer>${helloC}</script>
             <script defer src="/formula.js"></script>
             </html>`
         )

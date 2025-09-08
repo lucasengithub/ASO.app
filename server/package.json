@@ -1,15 +1,15 @@
 {
-  "name": "aso.app",
-  "version": "1.2.3",
+  "name": "aso.app-server",
+  "version": "1.2.beta",
   "description": "AsoAPP",
   "main": "dist/index.js",
   "scripts": {
-    "test": "tsc & npx nodemon dist/index.js",
+    "test": "nodemon src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc"
   },
-  "author": "",
-  "license": "Apache-2.0",
+  "author": "Lucas Peinado",
+  "license": "proprietary",
   "dependencies": {
     "@notionhq/client": "^2.2.16",
     "axios": "^1.9.0",
@@ -20,6 +20,7 @@
     "jsdom": "^26.0.0",
     "material-symbols": "^0.31.1",
     "node-fetch": "^3.3.2",
+    "nodemon": "^3.1.10",
     "pdf-lib": "^1.17.1",
     "typescript": "^5.7.3",
     "web-push": "^3.6.7",
@@ -30,7 +31,8 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.9",
     "@types/web-push": "^3.6.4",
-    "@types/xml2js": "^0.4.14"
+    "@types/xml2js": "^0.4.14",
+    "ts-node": "^10.9.2"
   },
   "nodemonConfig": {
     "ignore": [
