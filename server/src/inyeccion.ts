@@ -34,15 +34,7 @@ export const navGen = (content: string | string[], res: Response) => {
                 src: url('/icons/material-symbols/material-symbols-outlined.woff2') format('woff2');
               }
             </style>
-            <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-            <script>
-            window.OneSignalDeferred = window.OneSignalDeferred || [];
-            OneSignalDeferred.push(async function(OneSignal) {
-                await OneSignal.init({
-                appId: "a3a073f5-f2d0-4f7f-80ff-229e04c3b13e",
-                });
-            });
-            </script>
+
             </head>\n`
         )
         .replace(

@@ -1,6 +1,6 @@
 {
   "name": "aso.app-server",
-  "version": "1.2.beta",
+  "version": "1.2.5",
   "description": "AsoAPP",
   "main": "dist/index.js",
   "scripts": {
