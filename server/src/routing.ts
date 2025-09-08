@@ -207,6 +207,16 @@ export const routing = (app: any) => {
         });
     });
 
+    app.get('/o/licenses', (req: Request, res: Response) => {
+        fs.readFile(path.join(__dirname, '../public/o/licenses/index.html'), 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Error reading file');
+                return;
+            }
+            navGen(data, res);
+        });
+    });
+
     app.get('/ver', (req: Request, res: Response) => {
         try {
             const version = require(path.join(__dirname, '../package.json')).version;
