@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import cluster from 'cluster';
 import os from 'os';
 import app, { webRT } from './server'; 
-import { server } from 'typescript';
 dotenv.config();
+
 
 const numCPUs = os.cpus().length;
 

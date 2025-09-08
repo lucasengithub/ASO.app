@@ -4,49 +4,9 @@ import path from 'path';
 import { navGen } from './inyeccion';
 import { getHomeItems, getAADMItems, getEscuelaItems } from './notion';
 import { getRSSFeedHTML, getLimitedRSSFeedHTML, getESDRSSFeedHTML } from './rss';
-import express from 'express';
 import bodyParser from 'body-parser';
 import { generatePDF } from './ext/genPDF';
 import { execSync } from 'child_process';
-
-const subscriptionsFile = path.join(__dirname, '../subscriptions.json');
-
-// Cargar suscripciones desde el archivo
-function loadSubscriptions(): any[] {
-    if (fs.existsSync(subscriptionsFile)) {
-        try {
-            const data = fs.readFileSync(subscriptionsFile, 'utf-8');
-            return JSON.parse(data);
-        } catch (error) {
-            console.error('Error al cargar subscriptions.json:', error);
-            return [];
-        }
-    }
-    return [];
-}
-
-// Guardar suscripciones en el archivo
-function saveSubscriptions(subscriptions: any[]): void {
-    fs.writeFileSync(subscriptionsFile, JSON.stringify(subscriptions, null, 2));
-}
-
-// Inicializar las suscripciones
-let subscriptions = loadSubscriptions();
-
-// Agregar una nueva suscripción
-function addSubscription(subscription: any): boolean {
-    if (!subscriptions.find(sub => sub.endpoint === subscription.endpoint)) {
-        subscriptions.push(subscription);
-        saveSubscriptions(subscriptions);
-        return true;
-    }
-    return false; // Ya existe la suscripción
-}
-
-// Obtener todas las suscripciones
-function getSubscriptions(): any[] {
-    return subscriptions;
-}
 
 
 
@@ -101,6 +61,8 @@ export const routing = (app: any) => {
                 }
                 return '';
             }).join('\n');
+
+
 
             // Inyecta el contenido de notion
             data = data.replace(
