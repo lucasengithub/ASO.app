@@ -184,6 +184,22 @@ webRT.get('/contacto', async (req: Request, res: Response) => {
     res.send(modifiedContent);
 });
 
+webRT.get('/atc', async (req: Request, res: Response) => {
+    const pageData = await getNotionPage("26976f0f98e280e3b519c03c7f755d23");
+    const pageTitle = pageData.pageTitle || 'aadm';
+    const content = fs.readFileSync(path.join(__dirname, '../web/index.html'), 'utf8');
+    const modifiedContent = content
+        .replace(
+            '<title>AADM</title>',
+            `<title>${pageTitle} | aadm</title>`
+        )
+        .replace(
+            '<main>Error Desconocido</main>',
+            `<main>${pageData.content}</main>`
+        );
+    res.setHeader('Content-Type', 'text/html');
+    res.send(modifiedContent);
+});
 
 
 // de app a web
