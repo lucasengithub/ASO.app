@@ -166,6 +166,7 @@ form{
     background-color: #fdfdfd85;
     backdrop-filter: blur(10px);
     opacity: 0;
+    z-index: 999;;
     transition:  opacity 0.4s ease;
 }
 
