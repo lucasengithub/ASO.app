@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@import "material-symbols/index.css";
+@import "material-symbols/outlined.css";
+
+@font-face {
+  font-family: 'P-Kiko';
+  src: url('Assets/Fonts/P-Kiko/PKiko-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'P-Kiko';
+  src: url('Assets/Fonts/P-Kiko/PKiko-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-variant: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'P-Kiko';
+  src: url('Assets/Fonts/P-Kiko/PKiko-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-variant: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'P-Kiko';
+  src: url('Assets/Fonts/P-Kiko/PKiko-RegularItalic.otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
+  font-variant: normal;
+  font-display: swap;
+}
+
+* {
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+h1 {
+  font-family: 'P-Kiko', serif;
+  font-weight: normal;
+}

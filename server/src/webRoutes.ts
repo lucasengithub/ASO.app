@@ -205,7 +205,7 @@ webRT.get('/atc', async (req: Request, res: Response) => {
 // de app a web
 
 webRT.get('/app/i/:pageId', async (req: Request, res: Response) => {
-    res.redirect(`/${req.params.pageId}`);
+    res.redirect(`/id/${req.params.pageId}`);
 });
 webRT.get('/app', async (req: Request, res: Response) => {
     res.redirect(`https://app.aadm.space`);
