@@ -774,6 +774,98 @@ textarea:focus{
 }
 
 
+.bigWarn{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    background-color: #FDFDFD;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    overflow: scroll;
+
+    /* transición para fade suave */
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+
+    .topInfow{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 40px !important;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: #B30200;
+        color: #FDFDFD;
+        font-weight: 900;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    img{
+        padding-top: 80px;
+        width: 100px;
+        align-self: center;
+        aspect-ratio: 1/1 !important;
+        height: 200px;
+        object-fit: cover;
+        width: 200px;
+
+    }
+    h2{
+        font-size: 2em;
+        font-weight: bold;
+        text-align: left;
+        margin: 20px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    p{
+        font-size: 1.2em;
+        text-align: left;
+        margin: 20px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        margin-bottom: 100px;
+    }
+    button{
+        margin: 0;
+
+        margin-bottom: 20px; 
+        width: calc(100% - 20px);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        border-radius: 100px;
+        color: #FDFDFD;
+        background-color: #0065E0;
+        font-weight: 600;
+
+
+
+    }
+    .degblur{
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        bottom: 0;
+        margin: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        align-self: center;
+        background: linear-gradient(to top, #FDFDFD, #FDFDFD00);
+
+    }
+
+}
+
 /* Adaptación a pantallas */
 
 @media screen and (min-width: 600px){

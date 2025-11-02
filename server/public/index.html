@@ -82,8 +82,49 @@
 
     <div id="aso-bar"></div>
 
-</body>
+    <div class="bigWarn">
+        <div class="topInfow">APP DESCONTINUADA</div>
+        <img src="g13.png">
+        <h2>Esta APP caducará el de 1 de enero.</h2>
+        <p>
+            Gracias a todos por usar la ASO.app, pero tras ver que tiene problemas de rendimiento y disponibilidad, hemos decidido acabar con ella.
+            <br><br>
+            Estamos planeando una <b>nueva versión</b> escrita de cero, pero no sabemos cuando estará disponible. Esta app es construida por alumnos con poco tiempo y muchas entregas y para otros alumnos.
+            <br><br>
+            De momento, esta versión no se actualizará más para centrar esfuerzos en la nueva, por lo que el contenido puede no ser correcto. 
+            <br><br>
+            Si has configurado el mail, seguirá funcionando después del cierre de la app, pero la en sí app caducará el 1 de enero de 2026 y el contenido dejará de ser accesible.
+        </p>
+        <div class="degblur">
+            <button onclick="fadeWarn();">Acceder Igualmente</button>
+        </div>
+    </div>
 
+</body>
+<script>
+    function fadeWarn() {
+        const el = document.querySelector('.bigWarn');
+        if (!el) return;
+
+        // Forzar estilo inicial para asegurar transición
+        el.style.opacity = getComputedStyle(el).opacity || '1';
+
+        // Escuchar el final de la transición y ocultar el elemento
+        function onTransitionEnd(e) {
+            if (e.propertyName === 'opacity') {
+                el.style.display = 'none';
+                el.removeEventListener('transitionend', onTransitionEnd);
+            }
+        }
+
+        el.addEventListener('transitionend', onTransitionEnd);
+
+        // Iniciar fade
+        requestAnimationFrame(() => {
+            el.style.opacity = '0';
+        });
+    } 
+</script>
 <script>
 // Función para verificar si la app está instalada como PWA
 function isPWAInstalled() {
