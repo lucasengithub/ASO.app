@@ -1,66 +1,66 @@
 {
-	"name": "ASO.app",
-	"short_name": "ASO.app",
-	"start_url": "/app",
-	"display": "standalone",
-	"background_color": "#36e452",
-	"theme_color": "#36e452",
-	"scope": "/",
-	"description": "La ASO.app reúne todo lo que necesitas para la ESD.",
-	"screenshots": [
-		{
-		  "src": "/screenshots/m/IMG_2073.PNG",
-		  "type": "image/png",
-		  "sizes": "1179x2556",
-		  "form_factor": "narrow"
-		},
-		{
-		  "src": "/screenshots/m/IMG_2074.PNG",
-		  "type": "image/png",
-		  "sizes": "1179x2556",
-		  "form_factor": "narrow"
-		},
-		{
-		  "src": "/screenshots/m/IMG_2075.PNG",
-		  "type": "image/png",
-		  "sizes": "1179x2556",
-		  "form_factor": "narrow"
-		},
-		{
-		  "src": "/screenshots/m/IMG_2077.PNG",
-		  "type": "image/png",
-		  "sizes": "1179x2556",
-		  "form_factor": "narrow"
-		},
-		{
-		  "src": "/screenshots/m/IMG_2078.PNG",
-		  "type": "image/png",
-		  "sizes": "1179x2556",
-		  "form_factor": "narrow"
-		},
-		{
-			"src": "/screenshots/m/IMG_2076.PNG",
-			"type": "image/png",
-			"sizes": "1179x2556",
-			"form_factor": "narrow"
-		  },
-		{
-		  "src": "/screenshots/m/IMG_2079.PNG",
-		  "type": "image/png",
-		  "sizes": "1179x2556",
-		  "form_factor": "narrow"
-		}
-	  ],
-	"icons": [
-		{
-			"src": "icons/192.png",
-			"sizes": "192x192",
-			"type": "image/png"
-		},
-		{
-			"src": "icons/512.png",
-			"sizes": "512x512",
-			"type": "image/png"
-		}
-	]
+  "name": "ASO.app",
+  "short_name": "ASO.app",
+  "start_url": "https://app.aedm.org.es/app/",
+  "display": "standalone",
+  "background_color": "#36e452",
+  "theme_color": "#36e452",
+  "scope": "/",
+  "description": "La ASO.app reúne todo lo que necesitas para la ESD.",
+  "screenshots": [
+    {
+      "src": "/screenshots/m/IMG_2073.PNG",
+      "type": "image/png",
+      "sizes": "1179x2556",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/m/IMG_2074.PNG",
+      "type": "image/png",
+      "sizes": "1179x2556",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/m/IMG_2075.PNG",
+      "type": "image/png",
+      "sizes": "1179x2556",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/m/IMG_2077.PNG",
+      "type": "image/png",
+      "sizes": "1179x2556",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/m/IMG_2078.PNG",
+      "type": "image/png",
+      "sizes": "1179x2556",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/m/IMG_2076.PNG",
+      "type": "image/png",
+      "sizes": "1179x2556",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/m/IMG_2079.PNG",
+      "type": "image/png",
+      "sizes": "1179x2556",
+      "form_factor": "narrow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "icons/192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
