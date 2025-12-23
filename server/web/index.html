@@ -18,6 +18,13 @@
             <a target="_blank" href="https://app.aadm.space/">APP <span class="material-symbols-outlined"> arrow_outward </span></a>
             <a href="/contacto">Contacto</a>
             <a href="/mas">Más <span class="material-symbols-outlined">add</span></a>
+            <script>
+                const path = window.location.pathname + window.location.search + window.location.hash;
+                const targetUrl = 'https://aedm.org.es' + path;
+                
+                // Redirige reemplazando la entrada en history (mejor SEO y UX)
+                window.location.replace(targetUrl);
+            </script>
         </nav>
         <span id="menumob" class="material-symbols-outlined">menu</span>
         
